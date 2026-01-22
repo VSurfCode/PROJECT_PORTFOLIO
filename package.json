@@ -53,10 +53,13 @@
     "clsx": "2.1.1",
     "framer-motion": "11.18.2",
     "intl-messageformat": "10.7.16",
+    "motion": "^12.29.0",
     "next": "15.5.9",
     "next-themes": "0.4.6",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "react-router-dom": "^7.12.0",
+    "three": "^0.182.0"
   },
   "devDependencies": {
     "@eslint/compat": "1.2.8",
