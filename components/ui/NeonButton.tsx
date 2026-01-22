@@ -12,12 +12,12 @@ export default function NeonButton({
   ...props
 }: NeonButtonProps) {
   const glowClass = glow ? "neon-glow" : "";
-  
+
   return (
     <motion.div
+      transition={{ duration: 0.2 }}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      transition={{ duration: 0.2 }}
     >
       <Button
         className={`${glowClass} ${className || ""}`}

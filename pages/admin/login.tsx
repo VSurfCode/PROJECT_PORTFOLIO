@@ -45,22 +45,22 @@ export default function AdminLogin() {
           <p className="text-sm text-default-500">Portfolio Admin Panel</p>
         </CardHeader>
         <CardBody>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form className="space-y-4" onSubmit={handleLogin}>
             <Input
-              type="password"
-              label="Password"
-              placeholder="Enter admin password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               isRequired
               errorMessage={error}
               isInvalid={!!error}
+              label="Password"
+              placeholder="Enter admin password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
-              type="submit"
-              color="primary"
               className="w-full"
+              color="primary"
               isLoading={loading}
+              type="submit"
             >
               Login
             </Button>

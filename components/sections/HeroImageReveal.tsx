@@ -1,7 +1,8 @@
+import type { RefObject } from "react";
+
 import { useMemo } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "motion/react";
-import type { RefObject } from "react";
 
 type HeroImageRevealProps = {
   targetRef: RefObject<HTMLElement>;
@@ -29,6 +30,7 @@ export default function HeroImageReveal({
   // This means: inset(0 100% 0 0) = all hidden, inset(0 0% 0 0) = all visible
   const clipPath = useTransform(reveal, (v) => {
     const pct = Math.max(0, Math.min(100, v * 100));
+
     return `inset(0 ${100 - pct}% 0 0 round 18px)`;
   });
 
@@ -38,10 +40,9 @@ export default function HeroImageReveal({
     () => ({
       background:
         "linear-gradient(to bottom, rgba(0,255,65,0.0), rgba(0,255,65,0.95), rgba(0,255,65,0.0))",
-      boxShadow:
-        "0 0 18px rgba(0,255,65,0.65), 0 0 40px rgba(0,255,65,0.35)",
+      boxShadow: "0 0 18px rgba(0,255,65,0.65), 0 0 40px rgba(0,255,65,0.35)",
     }),
-    []
+    [],
   );
 
   return (
@@ -68,14 +69,14 @@ export default function HeroImageReveal({
         {/* Base image (non-neon) - always visible */}
         <div className="absolute inset-0 overflow-hidden rounded-[18px]">
           <Image
-            src={fromSrc}
-            alt=""
             fill
             priority
+            alt=""
             sizes="(max-width: 768px) 78vw, 560px"
-            style={{ 
+            src={fromSrc}
+            style={{
               objectFit: "cover",
-              objectPosition: "center center"
+              objectPosition: "center center",
             }}
           />
         </div>
@@ -86,14 +87,14 @@ export default function HeroImageReveal({
           style={{ clipPath }}
         >
           <Image
-            src={toSrc}
-            alt=""
             fill
             priority
+            alt=""
             sizes="(max-width: 768px) 78vw, 560px"
-            style={{ 
+            src={toSrc}
+            style={{
               objectFit: "cover",
-              objectPosition: "center center"
+              objectPosition: "center center",
             }}
           />
         </motion.div>
@@ -122,4 +123,3 @@ export default function HeroImageReveal({
     </div>
   );
 }
-

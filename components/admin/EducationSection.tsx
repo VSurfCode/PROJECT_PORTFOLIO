@@ -1,17 +1,27 @@
+import type { Education } from "@/types/portfolio";
+
 import { useEffect, useState } from "react";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Input } from "@heroui/input";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@heroui/modal";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@heroui/modal";
 import { Spinner } from "@heroui/spinner";
-import type { Education } from "@/types/portfolio";
 
 export default function EducationSection() {
   const [education, setEducation] = useState<Education[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [editingEducation, setEditingEducation] = useState<Education | null>(null);
+  const [editingEducation, setEditingEducation] = useState<Education | null>(
+    null,
+  );
   const [formData, setFormData] = useState<Partial<Education>>({});
 
   useEffect(() => {
@@ -22,6 +32,7 @@ export default function EducationSection() {
     try {
       const response = await fetch("/api/admin/education");
       const result = await response.json();
+
       setEducation(result);
     } catch (error) {
       console.error("Error fetching education:", error);
@@ -60,7 +71,7 @@ export default function EducationSection() {
         body: JSON.stringify(
           editingEducation
             ? { ...formData, id: editingEducation.id }
-            : formData
+            : formData,
         ),
       });
 
@@ -70,6 +81,7 @@ export default function EducationSection() {
         alert(editingEducation ? "Education updated!" : "Education created!");
       } else {
         const error = await response.json();
+
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
@@ -93,6 +105,7 @@ export default function EducationSection() {
         alert("Education deleted!");
       } else {
         const error = await response.json();
+
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
@@ -141,8 +154,8 @@ export default function EducationSection() {
                         Edit
                       </Button>
                       <Button
-                        size="sm"
                         color="danger"
+                        size="sm"
                         variant="flat"
                         onPress={() => handleDelete(edu.id)}
                       >
@@ -186,15 +199,15 @@ export default function EducationSection() {
             />
             <Input
               label="Date"
+              placeholder="e.g., 2023"
               value={formData.date || ""}
               onChange={(e) =>
                 setFormData({ ...formData, date: e.target.value || null })
               }
-              placeholder="e.g., 2023"
             />
             <Input
-              type="number"
               label="Display Order"
+              type="number"
               value={formData.display_order?.toString() || "0"}
               onChange={(e) =>
                 setFormData({
@@ -208,7 +221,7 @@ export default function EducationSection() {
             <Button variant="light" onPress={onClose}>
               Cancel
             </Button>
-            <Button color="primary" onPress={handleSave} isLoading={saving}>
+            <Button color="primary" isLoading={saving} onPress={handleSave}>
               Save
             </Button>
           </ModalFooter>

@@ -35,10 +35,7 @@ export default function GlassCard({
   ...props
 }: GlassCardProps) {
   const cardContent = (
-    <Card
-      className={glassCardVariants({ hover, glow, className })}
-      {...props}
-    >
+    <Card className={glassCardVariants({ hover, glow, className })} {...props}>
       {children}
     </Card>
   );
@@ -46,8 +43,8 @@ export default function GlassCard({
   if (hover) {
     return (
       <motion.div
-        whileHover={{ scale: 1.02, y: -4 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
+        whileHover={{ scale: 1.02, y: -4 }}
       >
         {cardContent}
       </motion.div>

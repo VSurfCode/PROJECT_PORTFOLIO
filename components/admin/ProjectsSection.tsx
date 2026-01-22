@@ -1,11 +1,19 @@
+import type { Project } from "@/types/portfolio";
+
 import { useEffect, useState } from "react";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Input } from "@heroui/input";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@heroui/modal";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@heroui/modal";
 import { Spinner } from "@heroui/spinner";
 import { Chip } from "@heroui/chip";
-import type { Project } from "@/types/portfolio";
 
 export default function ProjectsSection() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -23,6 +31,7 @@ export default function ProjectsSection() {
     try {
       const response = await fetch("/api/admin/projects");
       const result = await response.json();
+
       setProjects(result);
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -66,7 +75,9 @@ export default function ProjectsSection() {
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editingProject ? { ...formData, id: editingProject.id } : formData),
+        body: JSON.stringify(
+          editingProject ? { ...formData, id: editingProject.id } : formData,
+        ),
       });
 
       if (response.ok) {
@@ -75,6 +86,7 @@ export default function ProjectsSection() {
         alert(editingProject ? "Project updated!" : "Project created!");
       } else {
         const error = await response.json();
+
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
@@ -97,6 +109,7 @@ export default function ProjectsSection() {
         alert("Project deleted!");
       } else {
         const error = await response.json();
+
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
@@ -105,7 +118,11 @@ export default function ProjectsSection() {
   };
 
   const handleTechStackChange = (value: string) => {
-    const stack = value.split(",").map((s) => s.trim()).filter(Boolean);
+    const stack = value
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
     setFormData({ ...formData, tech_stack: stack });
   };
 
@@ -148,10 +165,10 @@ export default function ProjectsSection() {
                       </div>
                       {project.live_url && (
                         <a
-                          href={project.live_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
                           className="text-primary text-sm mt-2 block"
+                          href={project.live_url}
+                          rel="noopener noreferrer"
+                          target="_blank"
                         >
                           View Live
                         </a>
@@ -166,8 +183,8 @@ export default function ProjectsSection() {
                         Edit
                       </Button>
                       <Button
-                        size="sm"
                         color="danger"
+                        size="sm"
                         variant="flat"
                         onPress={() => handleDelete(project.id)}
                       >
@@ -182,7 +199,12 @@ export default function ProjectsSection() {
         </CardBody>
       </Card>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
+      <Modal
+        isOpen={isOpen}
+        scrollBehavior="inside"
+        size="2xl"
+        onClose={onClose}
+      >
         <ModalContent>
           <ModalHeader>
             {editingProject ? "Edit Project" : "Add Project"}
@@ -208,14 +230,13 @@ export default function ProjectsSection() {
               onChange={(e) =>
                 setFormData({ ...formData, long_description: e.target.value })
               }
-              multiline
-              minRows={3}
+              {...({ multiline: true, minRows: 3 } as any)}
             />
             <Input
               label="Tech Stack (comma-separated)"
+              placeholder="React, TypeScript, Node.js"
               value={formData.tech_stack?.join(", ") || ""}
               onChange={(e) => handleTechStackChange(e.target.value)}
-              placeholder="React, TypeScript, Node.js"
             />
             <Input
               label="Live URL"
@@ -237,8 +258,7 @@ export default function ProjectsSection() {
               onChange={(e) =>
                 setFormData({ ...formData, story_problem: e.target.value })
               }
-              multiline
-              minRows={2}
+              {...({ multiline: true, minRows: 2 } as any)}
             />
             <Input
               label="Story: Decisions"
@@ -246,8 +266,7 @@ export default function ProjectsSection() {
               onChange={(e) =>
                 setFormData({ ...formData, story_decisions: e.target.value })
               }
-              multiline
-              minRows={2}
+              {...({ multiline: true, minRows: 2 } as any)}
             />
             <Input
               label="Story: Result"
@@ -255,13 +274,12 @@ export default function ProjectsSection() {
               onChange={(e) =>
                 setFormData({ ...formData, story_result: e.target.value })
               }
-              multiline
-              minRows={2}
+              {...({ multiline: true, minRows: 2 } as any)}
             />
             <div className="flex gap-4">
               <Input
-                type="number"
                 label="Display Order"
+                type="number"
                 value={formData.display_order?.toString() || "0"}
                 onChange={(e) =>
                   setFormData({
@@ -272,14 +290,15 @@ export default function ProjectsSection() {
               />
               <div className="flex items-center">
                 <input
-                  type="checkbox"
                   checked={formData.featured || false}
+                  className="mr-2"
+                  id="featured-checkbox"
+                  type="checkbox"
                   onChange={(e) =>
                     setFormData({ ...formData, featured: e.target.checked })
                   }
-                  className="mr-2"
                 />
-                <label>Featured</label>
+                <label htmlFor="featured-checkbox">Featured</label>
               </div>
             </div>
           </ModalBody>
@@ -287,7 +306,7 @@ export default function ProjectsSection() {
             <Button variant="light" onPress={onClose}>
               Cancel
             </Button>
-            <Button color="primary" onPress={handleSave} isLoading={saving}>
+            <Button color="primary" isLoading={saving} onPress={handleSave}>
               Save
             </Button>
           </ModalFooter>

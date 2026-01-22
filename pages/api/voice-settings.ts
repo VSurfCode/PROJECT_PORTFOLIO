@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+
 import { createServerClient } from "@/lib/supabase/server";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -27,7 +28,8 @@ export default async function handler(
     });
   } catch (error: any) {
     console.error("Error fetching voice settings:", error);
-    return res.status(500).json({ 
+
+    return res.status(500).json({
       error: "Failed to fetch voice settings",
       show_boid_controls: true,
     });

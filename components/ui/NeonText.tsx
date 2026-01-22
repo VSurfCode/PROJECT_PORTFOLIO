@@ -7,7 +7,8 @@ const neonTextVariants = tv({
     intensity: {
       subtle: "text-primary",
       medium: "neon-text",
-      strong: "neon-text text-shadow-[0_0_10px_rgba(0,255,65,1),0_0_20px_rgba(0,255,65,0.8)]",
+      strong:
+        "neon-text text-shadow-[0_0_10px_rgba(0,255,65,1),0_0_20px_rgba(0,255,65,0.8)]",
     },
     size: {
       sm: "text-sm",

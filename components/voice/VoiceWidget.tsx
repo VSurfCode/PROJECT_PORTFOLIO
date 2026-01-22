@@ -1,11 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
-import { GlassCard, NeonButton } from "@/components/ui";
 import { RealtimeAgent, RealtimeSession } from "@openai/agents-realtime";
-import { generatePortfolioContext } from "@/lib/openai/context";
-import BackgroundDots from "./BackgroundDots";
 import { motion, AnimatePresence } from "motion/react";
+
+import BackgroundDots from "./BackgroundDots";
+
+import { GlassCard, NeonButton } from "@/components/ui";
+import { generatePortfolioContext } from "@/lib/openai/context";
 
 interface ConversationMessage {
   role: "user" | "assistant";
@@ -41,7 +43,8 @@ export default function VoiceWidget() {
   }, [isSpeaking]);
 
   const realtimeOnlyVoices = ["marin", "cedar"];
-  const canUseTTSForCurrentVoice = useTTS && !realtimeOnlyVoices.includes(voice);
+  const canUseTTSForCurrentVoice =
+    useTTS && !realtimeOnlyVoices.includes(voice);
 
   useEffect(() => {
     fetchVoiceSettings();
@@ -52,11 +55,15 @@ export default function VoiceWidget() {
       if (sessionRef.current) {
         try {
           const session = sessionRef.current as any;
+
           if (typeof session.close === "function") {
             session.close().catch(console.error);
           } else if (typeof session.disconnect === "function") {
             session.disconnect().catch(console.error);
-          } else if (session.transport && typeof session.transport.close === "function") {
+          } else if (
+            session.transport &&
+            typeof session.transport.close === "function"
+          ) {
             session.transport.close().catch(console.error);
           }
         } catch (error) {
@@ -69,8 +76,10 @@ export default function VoiceWidget() {
   const fetchVoiceSettings = async () => {
     try {
       const response = await fetch("/api/admin/voice-settings");
+
       if (response.ok) {
         const data = await response.json();
+
         setVoice(data.voice || "alloy");
         setUseTTS(data.use_tts !== false);
       }
@@ -95,15 +104,16 @@ export default function VoiceWidget() {
       }
 
       const data = await response.json();
-      
+
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
       }
 
       const audio = new Audio(data.audio);
+
       audioRef.current = audio;
-      
+
       audio.onplay = () => setIsSpeaking(true);
       audio.onended = () => {
         setIsSpeaking(false);
@@ -204,6 +214,7 @@ When someone asks about Alex, proactively share relevant information ONLY from t
           err?.error?.message ||
           err?.message ||
           "Connection error occurred";
+
         setError(String(msg));
       });
 
@@ -211,9 +222,12 @@ When someone asks about Alex, proactively share relevant information ONLY from t
       s.on("transport_event" as any, (event: any) => {
         if (!event?.type) return;
 
-        if (event.type === "conversation.item.input_audio_transcription.delta") {
+        if (
+          event.type === "conversation.item.input_audio_transcription.delta"
+        ) {
           const itemId = event.item_id;
           const delta = event.delta || "";
+
           if (typeof itemId === "string") {
             if (lastTranscriptItemIdRef.current !== itemId) {
               lastTranscriptItemIdRef.current = itemId;
@@ -221,12 +235,15 @@ When someone asks about Alex, proactively share relevant information ONLY from t
               currentUserMessageRef.current = delta;
             } else {
               setTranscript((prev) => prev + delta);
-              currentUserMessageRef.current = (currentUserMessageRef.current || "") + delta;
+              currentUserMessageRef.current =
+                (currentUserMessageRef.current || "") + delta;
             }
           }
         }
 
-        if (event.type === "conversation.item.input_audio_transcription.completed") {
+        if (
+          event.type === "conversation.item.input_audio_transcription.completed"
+        ) {
           setTranscript("");
           currentUserMessageRef.current = "";
           lastTranscriptItemIdRef.current = null;
@@ -234,6 +251,7 @@ When someone asks about Alex, proactively share relevant information ONLY from t
 
         if (event.type === "response.output_text.delta") {
           const delta = event.delta || "";
+
           if (typeof delta === "string" && delta.length > 0) {
             setResponse((prev) => prev + delta);
             currentAssistantMessageRef.current =
@@ -255,6 +273,7 @@ When someone asks about Alex, proactively share relevant information ONLY from t
       // History items are the most reliable way to get user + assistant messages
       s.on("history_added" as any, (item: any) => {
         const itemId = item?.itemId;
+
         if (!itemId || typeof itemId !== "string") return;
         if (seenHistoryItemIdsRef.current.has(itemId)) return;
         seenHistoryItemIdsRef.current.add(itemId);
@@ -266,6 +285,7 @@ When someone asks about Alex, proactively share relevant information ONLY from t
             .map((c: any) => {
               if (c?.type === "input_text") return c.text || "";
               if (c?.type === "input_audio") return c.transcript || "";
+
               return "";
             })
             .join("")
@@ -277,6 +297,7 @@ When someone asks about Alex, proactively share relevant information ONLY from t
             ...prev,
             { role: "user", content: text, timestamp: Date.now() },
           ]);
+
           return;
         }
 
@@ -285,6 +306,7 @@ When someone asks about Alex, proactively share relevant information ONLY from t
             .map((c: any) => {
               if (c?.type === "output_text") return c.text || "";
               if (c?.type === "output_audio") return c.transcript || "";
+
               return "";
             })
             .join("")
@@ -322,13 +344,14 @@ When someone asks about Alex, proactively share relevant information ONLY from t
 
   const handleConnect = async () => {
     setError(null);
-    
+
     if (!agentRef.current) {
       await initializeAgent();
     }
 
     if (!sessionRef.current) {
       setError("Failed to create session");
+
       return;
     }
 
@@ -339,6 +362,7 @@ When someone asks about Alex, proactively share relevant information ONLY from t
 
       if (!tokenResponse.ok) {
         const errorData = await tokenResponse.json();
+
         throw new Error(errorData.error || "Failed to get token");
       }
 
@@ -359,12 +383,12 @@ When someone asks about Alex, proactively share relevant information ONLY from t
       } catch {
         // ignore
       }
-      
+
       setTimeout(() => {
         if (!welcomeSentRef.current && sessionRef.current) {
           welcomeSentRef.current = true;
           const welcomeText = `welcome to Alexander's porfolio! feel free to ask anything about Alex!`;
-          
+
           setConversation([
             {
               role: "assistant",
@@ -372,8 +396,9 @@ When someone asks about Alex, proactively share relevant information ONLY from t
               timestamp: Date.now(),
             },
           ]);
-          
+
           const realtimeOnlyVoices = ["marin", "cedar"];
+
           if (realtimeOnlyVoices.includes(voice)) {
             playTTSAudio(welcomeText, "alloy");
           } else {
@@ -383,7 +408,9 @@ When someone asks about Alex, proactively share relevant information ONLY from t
       }, 1000);
     } catch (error: any) {
       console.error("Error connecting:", error);
-      setError(error.message || "Failed to connect. Please check your OpenAI API key.");
+      setError(
+        error.message || "Failed to connect. Please check your OpenAI API key.",
+      );
     }
   };
 
@@ -392,15 +419,19 @@ When someone asks about Alex, proactively share relevant information ONLY from t
       audioRef.current.pause();
       audioRef.current = null;
     }
-    
+
     if (sessionRef.current) {
       try {
         const session = sessionRef.current as any;
+
         if (typeof session.close === "function") {
           await session.close();
         } else if (typeof session.disconnect === "function") {
           await session.disconnect();
-        } else if (session.transport && typeof session.transport.close === "function") {
+        } else if (
+          session.transport &&
+          typeof session.transport.close === "function"
+        ) {
           await session.transport.close();
         }
       } catch (error) {
@@ -425,6 +456,7 @@ When someone asks about Alex, proactively share relevant information ONLY from t
   const handleTextSubmit = async () => {
     if (!sessionRef.current || !textInput.trim() || !isConnected) {
       setError("Please connect first");
+
       return;
     }
 
@@ -445,6 +477,7 @@ When someone asks about Alex, proactively share relevant information ONLY from t
   const toggleMic = async () => {
     if (!sessionRef.current || !isConnected) {
       setError("Please connect first");
+
       return;
     }
 
@@ -461,14 +494,26 @@ When someone asks about Alex, proactively share relevant information ONLY from t
       }
     } catch (error: any) {
       console.error("Error toggling mic:", error);
-      setError("Microphone is automatically active when connected. Just speak!");
+      setError(
+        "Microphone is automatically active when connected. Just speak!",
+      );
     }
   };
 
   const allMessages = [
     ...conversation,
-    ...(transcript ? [{ role: "user" as const, content: transcript, timestamp: Date.now() }] : []),
-    ...(response ? [{ role: "assistant" as const, content: response, timestamp: Date.now() }] : []),
+    ...(transcript
+      ? [{ role: "user" as const, content: transcript, timestamp: Date.now() }]
+      : []),
+    ...(response
+      ? [
+          {
+            role: "assistant" as const,
+            content: response,
+            timestamp: Date.now(),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -478,11 +523,10 @@ When someone asks about Alex, proactively share relevant information ONLY from t
         <div className="fixed top-20 right-4 z-50 max-w-sm">
           <AnimatePresence>
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
               className="glass-card"
+              exit={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: 10 }}
               style={{
                 maxHeight: "400px",
                 overflowY: "auto",
@@ -496,22 +540,46 @@ When someone asks about Alex, proactively share relevant information ONLY from t
                 scrollbarWidth: "thin",
                 scrollbarColor: "rgba(0, 255, 65, 0.3) transparent",
               }}
+              transition={{ duration: 0.3 }}
             >
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "12px",
+                }}
+              >
                 {allMessages.map((msg, idx) => (
                   <motion.div
                     key={idx}
-                    initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.2, delay: idx * 0.05 }}
+                    initial={{ opacity: 0, x: -10 }}
                     style={{
-                      color: msg.role === "user" ? "rgba(255, 255, 255, 0.9)" : "rgba(0, 255, 65, 0.9)",
+                      color:
+                        msg.role === "user"
+                          ? "rgba(255, 255, 255, 0.9)"
+                          : "rgba(0, 255, 65, 0.9)",
                     }}
+                    transition={{ duration: 0.2, delay: idx * 0.05 }}
                   >
-                    <div style={{ fontSize: "11px", fontWeight: 600, marginBottom: "4px", opacity: 0.8 }}>
+                    <div
+                      style={{
+                        fontSize: "11px",
+                        fontWeight: 600,
+                        marginBottom: "4px",
+                        opacity: 0.8,
+                      }}
+                    >
                       {msg.role === "user" ? "You" : "AI"}:
                     </div>
-                    <div style={{ fontSize: "13px", whiteSpace: "pre-wrap", wordBreak: "break-word", lineHeight: "1.4" }}>
+                    <div
+                      style={{
+                        fontSize: "13px",
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-word",
+                        lineHeight: "1.4",
+                      }}
+                    >
                       {msg.content}
                     </div>
                   </motion.div>
@@ -526,20 +594,20 @@ When someone asks about Alex, proactively share relevant information ONLY from t
           <NeonButton
             glow
             isIconOnly
-            onPress={() => setIsOpen(true)}
             className="rounded-full w-14 h-14"
+            onPress={() => setIsOpen(true)}
           >
             🎤
           </NeonButton>
         ) : (
-          <GlassCard hover={false} glow={false} className="w-80 max-h-96">
+          <GlassCard className="w-80 max-h-96" glow={false} hover={false}>
             <div className="p-4 space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-semibold">Ask Alex</h3>
                 <Button
+                  isIconOnly
                   size="sm"
                   variant="light"
-                  isIconOnly
                   onPress={() => {
                     setIsOpen(false);
                     if (isConnected) {
@@ -564,9 +632,9 @@ When someone asks about Alex, proactively share relevant information ONLY from t
                   </p>
                   <NeonButton
                     glow
-                    onPress={handleConnect}
                     className="w-full"
                     size="sm"
+                    onPress={handleConnect}
                   >
                     Connect
                   </NeonButton>
@@ -575,8 +643,9 @@ When someone asks about Alex, proactively share relevant information ONLY from t
                 <div className="space-y-3">
                   <div className="flex gap-2">
                     <Input
-                      size="sm"
+                      className="flex-1"
                       placeholder="Ask a question..."
+                      size="sm"
                       value={textInput}
                       onChange={(e) => setTextInput(e.target.value)}
                       onKeyPress={(e) => {
@@ -584,13 +653,12 @@ When someone asks about Alex, proactively share relevant information ONLY from t
                           handleTextSubmit();
                         }
                       }}
-                      className="flex-1"
                     />
                     <Button
+                      isDisabled={!textInput.trim()}
                       size="sm"
                       variant="flat"
                       onPress={handleTextSubmit}
-                      isDisabled={!textInput.trim()}
                     >
                       Send
                     </Button>
@@ -598,11 +666,11 @@ When someone asks about Alex, proactively share relevant information ONLY from t
 
                   <div className="flex gap-2">
                     <NeonButton
+                      className="flex-1"
+                      glow={isListening}
                       size="sm"
                       variant={isListening ? "solid" : "bordered"}
-                      glow={isListening}
                       onPress={toggleMic}
-                      className="flex-1"
                     >
                       {isListening ? "🎤 Listening..." : "🎤 Use Mic"}
                     </NeonButton>

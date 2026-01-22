@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Button } from "@heroui/button";
-import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Tabs, Tab } from "@heroui/tabs";
 import { Spinner } from "@heroui/spinner";
+
 import PersonalInfoSection from "@/components/admin/PersonalInfoSection";
 import ProjectsSection from "@/components/admin/ProjectsSection";
 import SkillsSection from "@/components/admin/SkillsSection";
@@ -18,6 +18,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const auth = sessionStorage.getItem("admin_auth");
+
     if (auth === "true") {
       setAuthenticated(true);
     } else {

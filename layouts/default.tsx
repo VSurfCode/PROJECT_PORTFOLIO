@@ -1,4 +1,5 @@
 import { Head } from "./head";
+
 import VoiceWidget from "@/components/voice/VoiceWidget";
 
 export default function DefaultLayout({
@@ -9,9 +10,7 @@ export default function DefaultLayout({
   return (
     <div className="relative flex flex-col min-h-screen">
       <Head />
-      <main className="flex-grow relative z-10">
-        {children}
-      </main>
+      <main className="flex-grow relative z-10">{children}</main>
       <VoiceWidget />
     </div>
   );

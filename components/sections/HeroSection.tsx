@@ -1,11 +1,12 @@
+import type { PersonalInfo } from "@/types/portfolio";
+
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@heroui/button";
-import { NeonButton, NeonText } from "@/components/ui";
 import { Link } from "@heroui/link";
-import { supabase } from "@/lib/supabase/client";
-import type { PersonalInfo } from "@/types/portfolio";
 import { motion } from "motion/react";
-import HeroImageReveal from "./HeroImageReveal";
+
+import { NeonButton, NeonText } from "@/components/ui";
+import { supabase } from "@/lib/supabase/client";
 
 export default function HeroSection() {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
@@ -36,6 +37,7 @@ export default function HeroSection() {
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
+
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
@@ -82,65 +84,65 @@ export default function HeroSection() {
         <motion.h1
           className="text-5xl md:text-7xl font-bold"
           initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: false, margin: "-100px" }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
-          <NeonText intensity="medium" size="3xl" as="span">
+          <NeonText as="span" intensity="medium" size="3xl">
             {personalInfo.name}
           </NeonText>
         </motion.h1>
         <motion.p
           className="text-2xl md:text-3xl text-default-600"
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-100px" }}
           transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+          viewport={{ once: false, margin: "-100px" }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           {personalInfo.title}
         </motion.p>
         <motion.p
           className="text-lg text-default-500"
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-100px" }}
           transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          viewport={{ once: false, margin: "-100px" }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           {personalInfo.location}
         </motion.p>
         <motion.p
           className="text-base md:text-lg max-w-2xl mx-auto text-default-600 leading-relaxed"
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-100px" }}
           transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+          viewport={{ once: false, margin: "-100px" }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           {personalInfo.summary}
         </motion.p>
         <motion.div
           className="flex flex-wrap justify-center gap-4 pt-4"
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-100px" }}
           transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+          viewport={{ once: false, margin: "-100px" }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           {personalInfo.linkedin && (
-            <Link href={personalInfo.linkedin} isExternal>
-              <NeonButton variant="bordered" glow>
+            <Link isExternal href={personalInfo.linkedin}>
+              <NeonButton glow variant="bordered">
                 LinkedIn
               </NeonButton>
             </Link>
           )}
           {personalInfo.github && (
-            <Link href={personalInfo.github} isExternal>
-              <NeonButton variant="bordered" glow>
+            <Link isExternal href={personalInfo.github}>
+              <NeonButton glow variant="bordered">
                 GitHub
               </NeonButton>
             </Link>
           )}
           <NeonButton
-            variant="bordered"
             glow
+            variant="bordered"
             onPress={() => scrollToSection("contact")}
           >
             Contact
@@ -149,31 +151,31 @@ export default function HeroSection() {
         <motion.div
           className="flex flex-wrap justify-center gap-3 pt-8"
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-100px" }}
           transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+          viewport={{ once: false, margin: "-100px" }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <Button
-            variant="light"
-            size="sm"
-            onPress={() => handleVibeSelect("recruiter")}
             className="text-default-500 hover:text-primary transition-colors"
+            size="sm"
+            variant="light"
+            onPress={() => handleVibeSelect("recruiter")}
           >
             Recruiter (2 min)
           </Button>
           <Button
-            variant="light"
-            size="sm"
-            onPress={() => handleVibeSelect("engineer")}
             className="text-default-500 hover:text-primary transition-colors"
+            size="sm"
+            variant="light"
+            onPress={() => handleVibeSelect("engineer")}
           >
             Engineer (5 min)
           </Button>
           <Button
-            variant="light"
-            size="sm"
-            onPress={() => handleVibeSelect("chaos")}
             className="text-default-500 hover:text-primary transition-colors"
+            size="sm"
+            variant="light"
+            onPress={() => handleVibeSelect("chaos")}
           >
             Chaos (fun)
           </Button>

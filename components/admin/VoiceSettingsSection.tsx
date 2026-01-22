@@ -20,7 +20,10 @@ export default function VoiceSettingsSection() {
   const [useTTS, setUseTTS] = useState<boolean>(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     fetchVoiceSettings();
@@ -29,8 +32,10 @@ export default function VoiceSettingsSection() {
   const fetchVoiceSettings = async () => {
     try {
       const response = await fetch("/api/admin/voice-settings");
+
       if (response.ok) {
         const data = await response.json();
+
         setVoice(data.voice || "alloy");
         setUseTTS(data.use_tts !== false);
       }
@@ -55,13 +60,17 @@ export default function VoiceSettingsSection() {
       });
 
       if (response.ok) {
-        setMessage({ type: "success", text: "Voice settings saved successfully!" });
+        setMessage({
+          type: "success",
+          text: "Voice settings saved successfully!",
+        });
         setTimeout(() => setMessage(null), 3000);
       } else {
         const error = await response.json();
-        setMessage({ 
-          type: "error", 
-          text: error.error || error.details || "Failed to save voice settings" 
+
+        setMessage({
+          type: "error",
+          text: error.error || error.details || "Failed to save voice settings",
         });
       }
     } catch (error) {
@@ -86,7 +95,8 @@ export default function VoiceSettingsSection() {
         <div>
           <h2 className="text-xl font-semibold mb-4">Voice Settings</h2>
           <p className="text-sm text-default-500 mb-4">
-            Choose the voice for the AI assistant. Changes will take effect on the next connection.
+            Choose the voice for the AI assistant. Changes will take effect on
+            the next connection.
           </p>
         </div>
 
@@ -104,37 +114,39 @@ export default function VoiceSettingsSection() {
 
         <div className="space-y-4">
           <Select
+            className="max-w-xs"
             label="AI Voice"
             selectedKeys={[voice]}
             onSelectionChange={(keys) => {
               const selected = Array.from(keys)[0] as string;
+
               setVoice(selected);
             }}
-            className="max-w-xs"
           >
             {VOICE_OPTIONS.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem key={option.value}>
                 {option.label}
               </SelectItem>
             ))}
           </Select>
-          
+
           {(voice === "marin" || voice === "cedar") && useTTS && (
             <div className="p-3 rounded-md text-sm bg-warning/10 text-warning border border-warning/20">
-              ⚠️ {voice.charAt(0).toUpperCase() + voice.slice(1)} is a Realtime-only voice. Please disable TTS mode to use it.
+              ⚠️ {voice.charAt(0).toUpperCase() + voice.slice(1)} is a
+              Realtime-only voice. Please disable TTS mode to use it.
             </div>
           )}
 
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <input
-                type="checkbox"
-                id="useTTS"
                 checked={useTTS}
-                onChange={(e) => setUseTTS(e.target.checked)}
                 className="w-4 h-4"
+                id="useTTS"
+                type="checkbox"
+                onChange={(e) => setUseTTS(e.target.checked)}
               />
-              <label htmlFor="useTTS" className="text-sm cursor-pointer">
+              <label className="text-sm cursor-pointer" htmlFor="useTTS">
                 Use High-Quality TTS (Better voices, ~300-600ms latency)
               </label>
             </div>
@@ -142,9 +154,9 @@ export default function VoiceSettingsSection() {
 
           <Button
             color="primary"
-            onPress={handleSave}
-            isLoading={saving}
             disabled={saving}
+            isLoading={saving}
+            onPress={handleSave}
           >
             Save Settings
           </Button>

@@ -1,8 +1,10 @@
+import type { Education } from "@/types/portfolio";
+
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
+
 import { GlassCard } from "@/components/ui";
 import { supabase } from "@/lib/supabase/client";
-import type { Education } from "@/types/portfolio";
-import { motion } from "motion/react";
 
 export default function EducationSection() {
   const [education, setEducation] = useState<Education[]>([]);
@@ -31,7 +33,7 @@ export default function EducationSection() {
 
   if (loading) {
     return (
-      <section id="education" className="py-20 px-6">
+      <section className="py-20 px-6" id="education">
         <div className="max-w-7xl mx-auto">
           <div className="animate-pulse text-center">Loading education...</div>
         </div>
@@ -40,14 +42,14 @@ export default function EducationSection() {
   }
 
   return (
-    <section id="education" className="py-20 px-6">
+    <section className="py-20 px-6" id="education">
       <div className="max-w-7xl mx-auto">
         <motion.h2
           className="text-4xl md:text-5xl font-bold text-center mb-12"
           initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: false, margin: "-100px" }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           Education
         </motion.h2>
@@ -55,12 +57,16 @@ export default function EducationSection() {
           {education.map((edu, index) => (
             <motion.div
               key={edu.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
-              whileHover={{ y: -8, transition: { duration: 0.2 } }}
               className="w-full max-w-md"
+              initial={{ opacity: 0, y: 50 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+                ease: "easeOut",
+              }}
+              viewport={{ once: false, margin: "-50px" }}
+              whileHover={{ y: -8, transition: { duration: 0.2 } }}
+              whileInView={{ opacity: 1, y: 0 }}
             >
               <GlassCard hover glow={false}>
                 <div className="p-6">

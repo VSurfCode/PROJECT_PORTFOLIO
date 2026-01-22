@@ -1,9 +1,10 @@
+import type { PersonalInfo } from "@/types/portfolio";
+
 import { useEffect, useState } from "react";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Input } from "@heroui/input";
 import { Spinner } from "@heroui/spinner";
-import type { PersonalInfo } from "@/types/portfolio";
 
 export default function PersonalInfoSection() {
   const [data, setData] = useState<PersonalInfo | null>(null);
@@ -19,6 +20,7 @@ export default function PersonalInfoSection() {
     try {
       const response = await fetch("/api/admin/personal-info");
       const result = await response.json();
+
       setData(result);
       setFormData(result);
     } catch (error) {
@@ -39,11 +41,13 @@ export default function PersonalInfoSection() {
 
       if (response.ok) {
         const result = await response.json();
+
         setData(result);
         setFormData(result);
         alert("Personal info updated successfully!");
       } else {
         const error = await response.json();
+
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
@@ -125,14 +129,13 @@ export default function PersonalInfoSection() {
           onChange={(e) =>
             setFormData({ ...formData, summary: e.target.value })
           }
-          multiline
-          minRows={5}
+          {...({ multiline: true, minRows: 5 } as any)}
         />
         <Button
-          color="primary"
-          onPress={handleSave}
-          isLoading={saving}
           className="w-full md:w-auto"
+          color="primary"
+          isLoading={saving}
+          onPress={handleSave}
         >
           Save Changes
         </Button>

@@ -1,14 +1,28 @@
+import type { Skill, SkillCategory } from "@/types/portfolio";
+
 import { useEffect, useState } from "react";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@heroui/modal";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@heroui/modal";
 import { Spinner } from "@heroui/spinner";
 import { Chip } from "@heroui/chip";
-import type { Skill, SkillCategory } from "@/types/portfolio";
 
-const categories: SkillCategory[] = ["frontend", "backend", "ai", "tools", "other"];
+const categories: SkillCategory[] = [
+  "frontend",
+  "backend",
+  "ai",
+  "tools",
+  "other",
+];
 
 export default function SkillsSection() {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -26,6 +40,7 @@ export default function SkillsSection() {
     try {
       const response = await fetch("/api/admin/skills");
       const result = await response.json();
+
       setSkills(result);
     } catch (error) {
       console.error("Error fetching skills:", error);
@@ -60,7 +75,7 @@ export default function SkillsSection() {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
-          editingSkill ? { ...formData, id: editingSkill.id } : formData
+          editingSkill ? { ...formData, id: editingSkill.id } : formData,
         ),
       });
 
@@ -70,6 +85,7 @@ export default function SkillsSection() {
         alert(editingSkill ? "Skill updated!" : "Skill created!");
       } else {
         const error = await response.json();
+
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
@@ -92,6 +108,7 @@ export default function SkillsSection() {
         alert("Skill deleted!");
       } else {
         const error = await response.json();
+
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
@@ -99,13 +116,17 @@ export default function SkillsSection() {
     }
   };
 
-  const skillsByCategory = skills.reduce((acc, skill) => {
-    if (!acc[skill.category]) {
-      acc[skill.category] = [];
-    }
-    acc[skill.category].push(skill);
-    return acc;
-  }, {} as Record<SkillCategory, Skill[]>);
+  const skillsByCategory = skills.reduce(
+    (acc, skill) => {
+      if (!acc[skill.category]) {
+        acc[skill.category] = [];
+      }
+      acc[skill.category].push(skill);
+
+      return acc;
+    },
+    {} as Record<SkillCategory, Skill[]>,
+  );
 
   if (loading) {
     return (
@@ -137,17 +158,17 @@ export default function SkillsSection() {
                   {skillsByCategory[category]?.map((skill) => (
                     <Chip
                       key={skill.id}
-                      onClose={() => handleDelete(skill.id)}
-                      variant="flat"
                       color="primary"
+                      variant="flat"
+                      onClose={() => handleDelete(skill.id)}
                     >
                       <div className="flex items-center gap-2">
                         <span>{skill.name}</span>
                         <Button
+                          className="min-w-0 h-auto p-1"
                           size="sm"
                           variant="light"
                           onPress={() => handleEdit(skill)}
-                          className="min-w-0 h-auto p-1"
                         >
                           ✏️
                         </Button>
@@ -163,9 +184,7 @@ export default function SkillsSection() {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
-          <ModalHeader>
-            {editingSkill ? "Edit Skill" : "Add Skill"}
-          </ModalHeader>
+          <ModalHeader>{editingSkill ? "Edit Skill" : "Add Skill"}</ModalHeader>
           <ModalBody className="space-y-4">
             <Input
               label="Skill Name"
@@ -179,18 +198,19 @@ export default function SkillsSection() {
               selectedKeys={formData.category ? [formData.category] : []}
               onSelectionChange={(keys) => {
                 const selected = Array.from(keys)[0] as SkillCategory;
+
                 setFormData({ ...formData, category: selected });
               }}
             >
               {categories.map((cat) => (
-                <SelectItem key={cat} value={cat}>
+                <SelectItem key={cat}>
                   {cat.charAt(0).toUpperCase() + cat.slice(1)}
                 </SelectItem>
               ))}
             </Select>
             <Input
-              type="number"
               label="Display Order"
+              type="number"
               value={formData.display_order?.toString() || "0"}
               onChange={(e) =>
                 setFormData({
@@ -204,7 +224,7 @@ export default function SkillsSection() {
             <Button variant="light" onPress={onClose}>
               Cancel
             </Button>
-            <Button color="primary" onPress={handleSave} isLoading={saving}>
+            <Button color="primary" isLoading={saving} onPress={handleSave}>
               Save
             </Button>
           </ModalFooter>

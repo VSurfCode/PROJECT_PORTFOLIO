@@ -1,18 +1,22 @@
 import { supabase } from "@/lib/supabase/client";
-import type { PersonalInfo, Project, Experience, Skill } from "@/types/portfolio";
 
 export async function generatePortfolioContext(): Promise<string> {
   try {
-    const [personalData, projectsData, experienceData, skillsData, educationData] =
-      await Promise.all([
-        supabase.from("personal_info").select("*").limit(1).single(),
-        supabase.from("projects").select("*").order("display_order"),
-        supabase.from("experience").select("*").order("start_date", {
-          ascending: false,
-        }),
-        supabase.from("skills").select("*"),
-        supabase.from("education").select("*").order("display_order"),
-      ]);
+    const [
+      personalData,
+      projectsData,
+      experienceData,
+      skillsData,
+      educationData,
+    ] = await Promise.all([
+      supabase.from("personal_info").select("*").limit(1).single(),
+      supabase.from("projects").select("*").order("display_order"),
+      supabase.from("experience").select("*").order("start_date", {
+        ascending: false,
+      }),
+      supabase.from("skills").select("*"),
+      supabase.from("education").select("*").order("display_order"),
+    ]);
 
     const personal = personalData.data;
     const projects = projectsData.data || [];
@@ -65,6 +69,7 @@ export async function generatePortfolioContext(): Promise<string> {
     return JSON.stringify(context, null, 2);
   } catch (error) {
     console.error("Error generating portfolio context:", error);
+
     return "{}";
   }
 }

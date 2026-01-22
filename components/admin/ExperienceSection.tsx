@@ -1,17 +1,27 @@
+import type { Experience } from "@/types/portfolio";
+
 import { useEffect, useState } from "react";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Input } from "@heroui/input";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@heroui/modal";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@heroui/modal";
 import { Spinner } from "@heroui/spinner";
-import type { Experience } from "@/types/portfolio";
 
 export default function ExperienceSection() {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [editingExperience, setEditingExperience] = useState<Experience | null>(null);
+  const [editingExperience, setEditingExperience] = useState<Experience | null>(
+    null,
+  );
   const [formData, setFormData] = useState<Partial<Experience>>({});
   const [descriptionText, setDescriptionText] = useState("");
   const [achievementsText, setAchievementsText] = useState("");
@@ -24,6 +34,7 @@ export default function ExperienceSection() {
     try {
       const response = await fetch("/api/admin/experience");
       const result = await response.json();
+
       setExperiences(result);
     } catch (error) {
       console.error("Error fetching experience:", error);
@@ -84,16 +95,19 @@ export default function ExperienceSection() {
         body: JSON.stringify(
           editingExperience
             ? { ...payload, id: editingExperience.id }
-            : payload
+            : payload,
         ),
       });
 
       if (response.ok) {
         await fetchExperiences();
         onClose();
-        alert(editingExperience ? "Experience updated!" : "Experience created!");
+        alert(
+          editingExperience ? "Experience updated!" : "Experience created!",
+        );
       } else {
         const error = await response.json();
+
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
@@ -116,6 +130,7 @@ export default function ExperienceSection() {
         alert("Experience deleted!");
       } else {
         const error = await response.json();
+
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
@@ -171,8 +186,8 @@ export default function ExperienceSection() {
                         Edit
                       </Button>
                       <Button
-                        size="sm"
                         color="danger"
+                        size="sm"
                         variant="flat"
                         onPress={() => handleDelete(exp.id)}
                       >
@@ -187,7 +202,12 @@ export default function ExperienceSection() {
         </CardBody>
       </Card>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
+      <Modal
+        isOpen={isOpen}
+        scrollBehavior="inside"
+        size="2xl"
+        onClose={onClose}
+      >
         <ModalContent>
           <ModalHeader>
             {editingExperience ? "Edit Experience" : "Add Experience"}
@@ -216,16 +236,16 @@ export default function ExperienceSection() {
                 }
               />
               <Input
-                type="date"
                 label="Start Date"
+                type="date"
                 value={formData.start_date || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, start_date: e.target.value })
                 }
               />
               <Input
-                type="date"
                 label="End Date (leave empty for current)"
+                type="date"
                 value={formData.end_date || ""}
                 onChange={(e) =>
                   setFormData({
@@ -239,22 +259,20 @@ export default function ExperienceSection() {
               label="Description (one per line)"
               value={descriptionText}
               onChange={(e) => setDescriptionText(e.target.value)}
-              multiline
-              minRows={4}
+              {...({ multiline: true, minRows: 4 } as any)}
             />
             <Input
               label="Achievements (one per line, optional)"
               value={achievementsText}
               onChange={(e) => setAchievementsText(e.target.value)}
-              multiline
-              minRows={2}
+              {...({ multiline: true, minRows: 2 } as any)}
             />
           </ModalBody>
           <ModalFooter>
             <Button variant="light" onPress={onClose}>
               Cancel
             </Button>
-            <Button color="primary" onPress={handleSave} isLoading={saving}>
+            <Button color="primary" isLoading={saving} onPress={handleSave}>
               Save
             </Button>
           </ModalFooter>
