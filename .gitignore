@@ -41,3 +41,4 @@ bun.lockb
 
 # env
 .env
+.sql

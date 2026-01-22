@@ -9,6 +9,7 @@ import ProjectsSection from "@/components/admin/ProjectsSection";
 import SkillsSection from "@/components/admin/SkillsSection";
 import ExperienceSection from "@/components/admin/ExperienceSection";
 import EducationSection from "@/components/admin/EducationSection";
+import VoiceSettingsSection from "@/components/admin/VoiceSettingsSection";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -69,6 +70,9 @@ export default function AdminDashboard() {
         </Tab>
         <Tab key="education" title="Education">
           <EducationSection />
+        </Tab>
+        <Tab key="voice" title="Voice Settings">
+          <VoiceSettingsSection />
         </Tab>
       </Tabs>
     </div>
