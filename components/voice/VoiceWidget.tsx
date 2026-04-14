@@ -26,6 +26,7 @@ export default function VoiceWidget() {
   const [error, setError] = useState<string | null>(null);
   const [voice, setVoice] = useState<string>("alloy");
   const [useTTS, setUseTTS] = useState<boolean>(true);
+  const [showWidget, setShowWidget] = useState<boolean>(false);
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
   const sessionRef = useRef<RealtimeSession | null>(null);
   const agentRef = useRef<RealtimeAgent | null>(null);
@@ -82,6 +83,7 @@ export default function VoiceWidget() {
 
         setVoice(data.voice || "alloy");
         setUseTTS(data.use_tts !== false);
+        setShowWidget(data.show_boid_controls !== false);
       }
     } catch (error) {
       console.error("Error fetching voice settings:", error);
@@ -515,6 +517,8 @@ When someone asks about Alex, proactively share relevant information ONLY from t
         ]
       : []),
   ];
+
+  if (!showWidget) return null;
 
   return (
     <>

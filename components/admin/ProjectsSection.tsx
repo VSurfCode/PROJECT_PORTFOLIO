@@ -166,7 +166,7 @@ export default function ProjectsSection() {
                       {project.live_url && (
                         <a
                           className="text-primary text-sm mt-2 block"
-                          href={project.live_url}
+                          href={project.live_url.startsWith('http') ? project.live_url : `https://${project.live_url}`}
                           rel="noopener noreferrer"
                           target="_blank"
                         >

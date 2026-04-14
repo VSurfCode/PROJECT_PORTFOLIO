@@ -142,7 +142,7 @@ export default function ProjectsSection() {
                         <NeonButton
                           as="a"
                           className="w-full"
-                          href={project.live_url}
+                          href={project.live_url.startsWith('http') ? project.live_url : `https://${project.live_url}`}
                           rel="noopener noreferrer"
                           size="sm"
                           target="_blank"
@@ -230,7 +230,7 @@ export default function ProjectsSection() {
                   <NeonButton
                     glow
                     as="a"
-                    href={selectedProject.live_url}
+                    href={selectedProject.live_url.startsWith('http') ? selectedProject.live_url : `https://${selectedProject.live_url}`}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -240,7 +240,7 @@ export default function ProjectsSection() {
                 {selectedProject.github_url && (
                   <Button
                     as="a"
-                    href={selectedProject.github_url}
+                    href={selectedProject.github_url.startsWith('http') ? selectedProject.github_url : `https://${selectedProject.github_url}`}
                     rel="noopener noreferrer"
                     target="_blank"
                     variant="bordered"

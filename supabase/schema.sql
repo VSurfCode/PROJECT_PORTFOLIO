@@ -74,6 +74,19 @@ CREATE TABLE IF NOT EXISTS admin_users (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS voice_settings (
+  id INTEGER PRIMARY KEY DEFAULT 1,
+  voice TEXT NOT NULL DEFAULT 'alloy',
+  show_boid_controls BOOLEAN DEFAULT true,
+  use_tts BOOLEAN DEFAULT true,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  CONSTRAINT voice_settings_single_row CHECK (id = 1),
+  CONSTRAINT voice_settings_voice_check CHECK (voice IN ('alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer', 'marin', 'cedar'))
+);
+
+ALTER TABLE voice_settings DROP CONSTRAINT IF EXISTS voice_settings_voice_check;
+ALTER TABLE voice_settings ADD CONSTRAINT voice_settings_voice_check CHECK (voice IN ('alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer', 'marin', 'cedar'));
+
 CREATE INDEX IF NOT EXISTS idx_projects_featured ON projects(featured, display_order);
 CREATE INDEX IF NOT EXISTS idx_skills_category ON skills(category, display_order);
 CREATE INDEX IF NOT EXISTS idx_project_skills_project ON project_skills(project_id);
@@ -87,6 +100,7 @@ ALTER TABLE project_skills ENABLE ROW LEVEL SECURITY;
 ALTER TABLE experience ENABLE ROW LEVEL SECURITY;
 ALTER TABLE education ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE voice_settings ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Public read access" ON personal_info FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON projects FOR SELECT USING (true);
@@ -94,6 +108,8 @@ CREATE POLICY "Public read access" ON skills FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON project_skills FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON experience FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON education FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON voice_settings FOR SELECT USING (true);
+CREATE POLICY "Admin write access" ON voice_settings FOR ALL USING (true);
 
 CREATE POLICY "Admin users private" ON admin_users FOR ALL USING (false);
 
@@ -112,4 +128,7 @@ CREATE TRIGGER update_projects_updated_at BEFORE UPDATE ON projects
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_experience_updated_at BEFORE UPDATE ON experience
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_voice_settings_updated_at BEFORE UPDATE ON voice_settings
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

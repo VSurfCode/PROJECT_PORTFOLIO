@@ -18,6 +18,7 @@ const VOICE_OPTIONS = [
 export default function VoiceSettingsSection() {
   const [voice, setVoice] = useState<string>("alloy");
   const [useTTS, setUseTTS] = useState<boolean>(true);
+  const [showAIWidget, setShowAIWidget] = useState<boolean>(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{
@@ -38,6 +39,7 @@ export default function VoiceSettingsSection() {
 
         setVoice(data.voice || "alloy");
         setUseTTS(data.use_tts !== false);
+        setShowAIWidget(data.show_boid_controls !== false);
       }
     } catch (error) {
       console.error("Error fetching voice settings:", error);
@@ -56,7 +58,7 @@ export default function VoiceSettingsSection() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ voice, use_tts: useTTS }),
+        body: JSON.stringify({ voice, use_tts: useTTS, show_boid_controls: showAIWidget }),
       });
 
       if (response.ok) {
@@ -138,6 +140,18 @@ export default function VoiceSettingsSection() {
           )}
 
           <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <input
+                checked={showAIWidget}
+                className="w-4 h-4"
+                id="showAIWidget"
+                type="checkbox"
+                onChange={(e) => setShowAIWidget(e.target.checked)}
+              />
+              <label className="text-sm cursor-pointer" htmlFor="showAIWidget">
+                Enable AI Integration on Frontend
+              </label>
+            </div>
             <div className="flex items-center gap-3">
               <input
                 checked={useTTS}
