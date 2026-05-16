@@ -9,9 +9,416 @@
 @theme {
   --font-sans: "font", sans-serif;
   --font-mono: "monospace", monospace;
+  --font-comic: var(--font-comic), "Bangers", cursive;
+  --font-comic-body: var(--font-comic-body), "Comic Neue", cursive;
+
+  /* Comic color palette */
+  --color-comic-black: #1a1a2e;
+  --color-comic-white: #fefefe;
+  --color-comic-cream: #f5f0e8;
+  --color-comic-yellow: #ffd93d;
+  --color-comic-red: #ff6b6b;
+  --color-comic-blue: #4ecdc4;
+  --color-comic-purple: #a855f7;
+  --color-comic-orange: #ff8c42;
+  --color-comic-pink: #ff6b9d;
+  --color-comic-green: #00ff41;
+  --color-comic-panel-bg: #16213e;
+  --color-comic-panel-border: #0f0f23;
+  --color-comic-cyan: #00d9ff;
+  --color-comic-violet: #6d28d9;
+  --color-comic-magenta: #ff1675;
 }
 
+:root {
+  --color-comic-ink: #000000;
+  --color-comic-bg: #ffffff;
+}
+
+.dark {
+  --color-comic-ink: #3a0000;
+  --color-comic-bg: #780606;
+}
+
+
+/* ===== COMIC TYPOGRAPHY ===== */
+.font-comic {
+  font-family: var(--font-comic), "Bangers", cursive;
+}
+
+.font-comic-body {
+  font-family: var(--font-comic-body), "Comic Neue", cursive;
+}
+
+/* ===== COMIC PANEL SYSTEM ===== */
 @layer utilities {
+
+  /* --- Base Panel --- */
+  .comic-panel {
+    position: relative;
+    border: 4px solid var(--color-comic-ink);
+    background: var(--color-comic-panel-bg);
+    overflow: hidden;
+  }
+
+  .comic-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle, rgba(0,0,0,0.08) 1px, transparent 1px);
+    background-size: 4px 4px;
+    opacity: 0.3;
+    z-index: 1;
+  }
+
+  /* --- Ink Border (thick hand-drawn feel) --- */
+  .ink-border {
+    border: 3px solid var(--color-comic-ink);
+    box-shadow:
+      3px 3px 0px var(--color-comic-ink),
+      inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+
+  .ink-border-thick {
+    border: 5px solid var(--color-comic-ink);
+    box-shadow:
+      5px 5px 0px var(--color-comic-ink);
+  }
+
+  /* --- Comic Drop Shadow --- */
+  .comic-shadow {
+    box-shadow: 4px 4px 0px var(--color-comic-ink);
+  }
+
+  .comic-shadow-lg {
+    box-shadow: 6px 6px 0px var(--color-comic-ink);
+  }
+
+  .comic-shadow-colored {
+    box-shadow:
+      4px 4px 0px var(--color-comic-ink),
+      8px 8px 0px var(--color-comic-yellow);
+  }
+
+  /* --- Halftone / Ben-Day Dot Overlay --- */
+  .halftone {
+    position: relative;
+  }
+
+  .halftone::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle, rgba(0,0,0,0.15) 1px, transparent 1px);
+    background-size: 6px 6px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .halftone-light::before {
+    background:
+      radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 5px 5px;
+  }
+
+  .halftone-colored::before {
+    background:
+      radial-gradient(circle, rgba(78,205,196,0.12) 1px, transparent 1px);
+    background-size: 5px 5px;
+  }
+
+  /* --- Speech Bubble --- */
+  .speech-bubble {
+    position: relative;
+    background: var(--color-comic-cream);
+    color: var(--color-comic-ink);
+    border: 3px solid var(--color-comic-ink);
+    border-radius: 20px;
+    padding: 1.25rem 1.5rem;
+    font-family: var(--font-comic-body), "Comic Neue", cursive;
+    box-shadow: 3px 3px 0px var(--color-comic-ink);
+  }
+
+  .speech-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -18px;
+    left: 30px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 18px solid var(--color-comic-ink);
+  }
+
+  .speech-bubble::before {
+    content: "";
+    position: absolute;
+    bottom: -13px;
+    left: 33px;
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 15px solid var(--color-comic-cream);
+    z-index: 1;
+  }
+
+  /* --- Thought Bubble --- */
+  .thought-bubble {
+    position: relative;
+    background: var(--color-comic-cream);
+    color: var(--color-comic-ink);
+    border: 3px solid var(--color-comic-ink);
+    border-radius: 50px;
+    padding: 1.25rem 1.75rem;
+    font-family: var(--font-comic-body), "Comic Neue", cursive;
+  }
+
+  .thought-bubble::after,
+  .thought-bubble::before {
+    content: "";
+    position: absolute;
+    background: var(--color-comic-cream);
+    border: 3px solid var(--color-comic-ink);
+    border-radius: 50%;
+  }
+
+  .thought-bubble::after {
+    width: 16px;
+    height: 16px;
+    bottom: -12px;
+    left: 30px;
+  }
+
+  .thought-bubble::before {
+    width: 10px;
+    height: 10px;
+    bottom: -22px;
+    left: 22px;
+  }
+
+  /* --- Action Lines (speed lines behind elements) --- */
+  .action-lines {
+    position: relative;
+  }
+
+  .action-lines::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    right: -20px;
+    height: 120%;
+    transform: translateY(-50%);
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 8px,
+      rgba(255,255,255,0.03) 8px,
+      rgba(255,255,255,0.03) 9px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* --- POW / ZAP burst shapes --- */
+  .pow-burst {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pow-burst::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    background: var(--color-comic-yellow);
+    clip-path: polygon(
+      50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%,
+      50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%
+    );
+    z-index: -1;
+  }
+
+  /* --- Comic Card (replaces glass-card) --- */
+  .comic-card {
+    background: var(--color-comic-panel-bg);
+    border: 3px solid var(--color-comic-ink);
+    box-shadow: 4px 4px 0px var(--color-comic-ink);
+    border-radius: 4px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .comic-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 4px 4px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .comic-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px var(--color-comic-ink);
+  }
+
+  .comic-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* --- Comic Badge/Chip --- */
+  .comic-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border: 2px solid var(--color-comic-ink);
+    border-radius: 4px;
+    font-family: var(--font-comic), "Bangers", cursive;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    box-shadow: 2px 2px 0px var(--color-comic-ink);
+    transition: all 0.15s ease;
+    cursor: default;
+  }
+
+  .comic-chip:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px var(--color-comic-ink);
+  }
+
+  .comic-chip-yellow {
+    background: var(--color-comic-yellow);
+    color: var(--color-comic-ink);
+  }
+
+  .comic-chip-blue {
+    background: var(--color-comic-blue);
+    color: var(--color-comic-ink);
+  }
+
+  .comic-chip-red {
+    background: var(--color-comic-red);
+    color: var(--color-comic-ink);
+  }
+
+  .comic-chip-purple {
+    background: var(--color-comic-purple);
+    color: white;
+  }
+
+  .comic-chip-orange {
+    background: var(--color-comic-orange);
+    color: var(--color-comic-ink);
+  }
+
+  .comic-chip-green {
+    background: var(--color-comic-green);
+    color: var(--color-comic-ink);
+  }
+
+  /* --- Comic Button --- */
+  .comic-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 24px;
+    border: 3px solid var(--color-comic-ink);
+    border-radius: 4px;
+    font-family: var(--font-comic), "Bangers", cursive;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    box-shadow: 4px 4px 0px var(--color-comic-ink);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    color: var(--color-comic-ink);
+  }
+
+  .comic-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px var(--color-comic-ink);
+  }
+
+  .comic-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px var(--color-comic-ink);
+  }
+
+  .comic-btn-primary {
+    background: var(--color-comic-yellow);
+  }
+
+  .comic-btn-secondary {
+    background: var(--color-comic-blue);
+  }
+
+  .comic-btn-danger {
+    background: var(--color-comic-red);
+  }
+
+  /* --- Section Heading (comic style) --- */
+  .comic-heading {
+    font-family: var(--font-comic), "Bangers", cursive;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 0.9;
+    text-transform: uppercase;
+    color: var(--color-comic-yellow);
+    text-shadow:
+      0.05em 0.05em 0 var(--color-comic-ink),
+      0.08em 0.08em 0 #7a0000,
+      -0.025em -0.025em 0 var(--color-comic-ink),
+      0.025em -0.025em 0 var(--color-comic-ink),
+      -0.025em 0.025em 0 var(--color-comic-ink),
+      0.025em 0.025em 0 var(--color-comic-ink);
+    -webkit-text-stroke: clamp(0.05rem, 0.16vw, 0.12rem) var(--color-comic-ink);
+    position: relative;
+    display: inline-block;
+  }
+
+  .comic-heading-white {
+    color: var(--color-comic-white);
+    text-shadow:
+      3px 3px 0px var(--color-comic-ink),
+      -1px -1px 0px var(--color-comic-ink),
+      1px -1px 0px var(--color-comic-ink),
+      -1px 1px 0px var(--color-comic-ink),
+      1px 1px 0px var(--color-comic-ink);
+  }
+
+  /* --- Angular Divider SVG Lines --- */
+  .comic-divider-container {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    z-index: 10;
+    margin-top: -30px;
+    margin-bottom: -30px;
+  }
+
+  /* --- Starburst background --- */
+  .starburst-bg {
+    background:
+      repeating-conic-gradient(
+        var(--color-comic-panel-bg) 0deg 15deg,
+        rgba(255,255,255,0.02) 15deg 30deg
+      );
+  }
+
+  /* ===== KEEP LEGACY UTILITIES (for sections not yet converted) ===== */
   .glass {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
@@ -76,4 +483,1231 @@
     color: rgb(0, 255, 65);
     text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
   }
+}
+
+/* ===== GLOBAL COMIC BODY STYLING ===== */
+body {
+  font-family: var(--font-comic-body), "Comic Neue", cursive;
+  background-color: var(--color-comic-bg);
+  color: var(--color-comic-ink);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-comic), "Bangers", cursive;
+  letter-spacing: 1px;
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-comic-ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-comic-yellow);
+  border: 2px solid var(--color-comic-ink);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-comic-orange);
+}
+
+/* ==========================================================================
+   PAGE SECTIONS (Giant Comic Panels)
+   ========================================================================== */
+
+.comic-section {
+  position: relative;
+  overflow: hidden;
+  /* Add massive padding to account for the deep 4vw diagonal cuts */
+  padding-top: max(6rem, 6vw);
+  padding-bottom: max(6rem, 6vw);
+}
+
+.comic-section-red {
+  background:
+    linear-gradient(132deg, rgba(255,22,117,0.92), rgba(255,107,107,0.86) 42%, rgba(255,140,66,0.92)),
+    var(--color-comic-red);
+}
+
+.comic-section-purple {
+  background:
+    linear-gradient(128deg, rgba(11,13,48,0.92), rgba(109,40,217,0.92) 48%, rgba(0,217,255,0.72)),
+    var(--color-comic-purple);
+}
+
+.comic-section-blue {
+  background:
+    linear-gradient(132deg, rgba(0,217,255,0.86), rgba(78,205,196,0.86) 46%, rgba(255,217,61,0.72)),
+    var(--color-comic-blue);
+}
+
+.comic-section-green {
+  background:
+    linear-gradient(128deg, rgba(0,255,65,0.86), rgba(78,205,196,0.84) 46%, rgba(255,22,117,0.58)),
+    var(--color-comic-green);
+}
+
+.comic-section-yellow {
+  background:
+    linear-gradient(128deg, rgba(255,217,61,0.96), rgba(255,140,66,0.84) 52%, rgba(0,217,255,0.7)),
+    var(--color-comic-yellow);
+}
+
+.dark .comic-section-red {
+  background:
+    radial-gradient(circle at 18% 10%, rgba(122,0,0,0.48), transparent 24%),
+    radial-gradient(circle at 88% 15%, rgba(109,40,217,0.28), transparent 22%),
+    linear-gradient(132deg, #070000 0%, #190002 38%, #3a0000 64%, #090000 100%);
+}
+
+.dark .comic-section-purple {
+  background:
+    radial-gradient(circle at 72% 16%, rgba(122,0,0,0.38), transparent 25%),
+    linear-gradient(128deg, #06000d 0%, #15001f 42%, #250036 70%, #040006 100%);
+}
+
+.dark .comic-section-blue {
+  background:
+    radial-gradient(circle at 20% 18%, rgba(0,80,75,0.28), transparent 24%),
+    radial-gradient(circle at 90% 30%, rgba(122,0,0,0.3), transparent 24%),
+    linear-gradient(132deg, #010b0d 0%, #041717 42%, #102000 72%, #030404 100%);
+}
+
+.dark .comic-section-green {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(0,120,38,0.24), transparent 24%),
+    radial-gradient(circle at 86% 22%, rgba(122,0,0,0.34), transparent 24%),
+    linear-gradient(128deg, #020900 0%, #071500 46%, #172000 72%, #050200 100%);
+}
+
+.dark .comic-section-yellow {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(122,0,0,0.44), transparent 24%),
+    linear-gradient(128deg, #130000 0%, #2a0000 44%, #3a1500 70%, #080000 100%);
+}
+
+/* Halftone dot pattern overlay for sections */
+.comic-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.15) 1.5px, transparent 1.5px);
+  background-size: 6px 6px; /* Slightly larger dots for massive sections */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.dark .comic-section::before {
+  background-image: radial-gradient(circle, rgba(122,0,0,0.42) 1.5px, transparent 1.5px);
+  background-size: 6px 6px;
+  opacity: 0.9;
+}
+
+.comic-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(104deg, transparent 0 13%, rgba(0,0,0,0.82) 13.15% 13.7%, transparent 13.85%),
+    linear-gradient(76deg, transparent 0 83%, rgba(0,0,0,0.74) 83.15% 83.8%, transparent 84%),
+    linear-gradient(170deg, transparent 0 52%, rgba(0,0,0,0.42) 52.15% 52.55%, transparent 52.75%),
+    repeating-linear-gradient(101deg, transparent 0 18px, rgba(255,255,255,0.08) 19px, transparent 20px),
+    radial-gradient(circle at 18% 20%, rgba(255,255,255,0.22), transparent 18%),
+    radial-gradient(circle at 88% 16%, rgba(0,0,0,0.28), transparent 18%);
+  mix-blend-mode: overlay;
+  opacity: 0.58;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dark .comic-section::after {
+  background:
+    linear-gradient(104deg, transparent 0 13%, rgba(122,0,0,0.78) 13.15% 13.7%, transparent 13.85%),
+    linear-gradient(76deg, transparent 0 83%, rgba(20,0,0,0.94) 83.15% 83.8%, transparent 84%),
+    linear-gradient(170deg, transparent 0 52%, rgba(122,0,0,0.5) 52.15% 52.55%, transparent 52.75%),
+    repeating-linear-gradient(101deg, transparent 0 18px, rgba(122,0,0,0.12) 19px, transparent 20px),
+    radial-gradient(circle at 18% 20%, rgba(122,0,0,0.28), transparent 18%),
+    radial-gradient(circle at 88% 16%, rgba(0,0,0,0.8), transparent 20%);
+  mix-blend-mode: normal;
+  opacity: 0.92;
+}
+
+/* Ensure content stays above the dots */
+.comic-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.comic-sfx {
+  position: absolute;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 8rem;
+  min-height: 4.8rem;
+  padding: 0.6rem 1rem;
+  color: var(--color-comic-ink);
+  font-family: var(--font-comic), "Bangers", cursive;
+  font-size: clamp(1.7rem, 4vw, 3.8rem);
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0 var(--color-comic-white);
+  filter: drop-shadow(5px 5px 0 var(--color-comic-ink));
+}
+
+.comic-sfx::before {
+  content: "";
+  position: absolute;
+  inset: -0.3rem;
+  z-index: -1;
+  background: var(--color-comic-yellow);
+  clip-path: polygon(50% 0%, 59% 29%, 90% 10%, 75% 42%, 100% 50%, 72% 59%, 89% 91%, 58% 72%, 50% 100%, 41% 72%, 9% 91%, 26% 59%, 0 50%, 25% 42%, 10% 10%, 41% 29%);
+}
+
+.comic-sfx-left {
+  top: 7rem;
+  left: clamp(1rem, 3vw, 4rem);
+}
+
+.comic-sfx-right {
+  top: 13rem;
+  right: clamp(1rem, 4vw, 5rem);
+}
+
+.comic-page-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: stretch;
+}
+
+.blank-comic-section {
+  min-height: 100vh;
+  padding: 0;
+  overflow: hidden;
+  background: #000000;
+}
+
+.blank-comic-title-strip {
+  min-height: clamp(5rem, 10vw, 8rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  background: #000000;
+  border-top: clamp(0.25rem, 0.6vw, 0.45rem) solid #000000;
+  border-bottom: clamp(0.25rem, 0.6vw, 0.45rem) solid #000000;
+}
+
+.blank-comic-title {
+  margin: 0;
+  color: var(--color-comic-yellow);
+  font-family: var(--font-comic), "Bangers", cursive;
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.9;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow:
+    0.05em 0.05em 0 #000000,
+    0.08em 0.08em 0 #7a0000,
+    -0.025em -0.025em 0 #000000,
+    0.025em -0.025em 0 #000000,
+    -0.025em 0.025em 0 #000000,
+    0.025em 0.025em 0 #000000;
+  -webkit-text-stroke: clamp(0.08rem, 0.25vw, 0.18rem) #000000;
+}
+
+.blank-comic-title-underline {
+  width: clamp(5rem, 12vw, 9rem);
+  height: clamp(0.2rem, 0.45vw, 0.35rem);
+  margin-top: clamp(0.45rem, 1vw, 0.8rem);
+  background: var(--color-comic-yellow);
+  box-shadow: 0.18rem 0.18rem 0 #7a0000;
+}
+
+.blank-comic-page {
+  width: 100%;
+  min-height: calc(100vh - clamp(5rem, 10vw, 8rem));
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 1fr 1.15fr 1fr;
+  gap: clamp(0.45rem, 0.9vw, 0.8rem);
+  background: #000000;
+  border: clamp(0.25rem, 0.6vw, 0.45rem) solid #000000;
+  transition:
+    grid-template-columns 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    grid-template-rows 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.blank-comic-panel {
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  background: #ffffff;
+  cursor: pointer;
+  overflow: hidden;
+  padding: clamp(1rem, 2.5vw, 2rem);
+  transition:
+    clip-path 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 240ms ease;
+}
+
+.blank-comic-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, rgba(0, 0, 0, 0.2) 1px, transparent 1px),
+    linear-gradient(135deg, transparent 0 58%, rgba(255, 255, 255, 0.08) 59% 61%, transparent 62%);
+  background-size: 5px 5px, 22px 22px;
+  opacity: 0.5;
+  z-index: 1;
+}
+
+.blank-comic-panel::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 55%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
+  z-index: 1;
+}
+
+.blank-comic-panel:hover {
+  filter: brightness(0.96);
+}
+
+.project-panel-theme-grapevine {
+  background:
+    radial-gradient(circle at 22% 52%, rgba(177, 110, 255, 0.72) 0 18%, transparent 19%),
+    radial-gradient(circle at 30% 48%, transparent 0 27%, rgba(255, 255, 255, 0.7) 28% 29%, transparent 30%),
+    linear-gradient(135deg, #2d104f 0%, #5f20a0 55%, #190823 100%);
+}
+
+.project-panel-theme-nerdherd {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(128, 255, 166, 0.72) 0 26%, transparent 27%),
+    linear-gradient(135deg, #a8ffc8 0%, #54f298 52%, #deffe9 100%);
+}
+
+.project-panel-theme-tutorcraft {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(126, 28, 255, 0.44) 0 18%, transparent 42%),
+    radial-gradient(circle at 50% 42%, #050008 0 20%, transparent 42%),
+    linear-gradient(135deg, #080808 0%, #211330 52%, #050505 100%);
+}
+
+.project-panel-theme-life {
+  background:
+    radial-gradient(circle at 58% 48%, rgba(255, 255, 255, 0.88) 0 15%, transparent 28%),
+    radial-gradient(circle at 58% 48%, rgba(0, 0, 0, 0.22) 0 25%, transparent 33%),
+    radial-gradient(circle at 58% 48%, #e6e2d8 0 18%, transparent 38%),
+    linear-gradient(135deg, #f3df70 0%, #d9c24b 52%, #fff2a3 100%);
+}
+
+.project-panel-image {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  transition:
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 240ms ease;
+}
+
+.project-panel-image-cover {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.72;
+}
+
+.project-panel-image-contain {
+  top: 50%;
+  left: 50%;
+  width: min(58%, 32rem);
+  max-height: 72%;
+  object-fit: contain;
+  opacity: 0.78;
+  transform: translate(-50%, -50%);
+}
+
+.project-panel-theme-nerdherd .project-panel-image-contain {
+  width: min(64%, 34rem);
+  opacity: 0.82;
+}
+
+.project-panel-theme-tutorcraft .project-panel-image-contain {
+  width: min(70%, 36rem);
+  opacity: 0.92;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 2rem rgba(137, 35, 255, 0.62));
+}
+
+.project-panel-theme-life .project-panel-image-contain {
+  width: min(62%, 34rem);
+  opacity: 0.86;
+  mix-blend-mode: multiply;
+  filter: contrast(1.08) drop-shadow(0 0 1.8rem rgba(0, 0, 0, 0.22));
+}
+
+.blank-comic-panel:hover .project-panel-image-cover {
+  transform: scale(1.08);
+}
+
+.blank-comic-panel:hover .project-panel-image-contain {
+  transform: translate(-50%, -50%) scale(1.08);
+  opacity: 0.92;
+}
+
+.project-panel-kicker {
+  position: absolute;
+  top: clamp(0.75rem, 1.5vw, 1.25rem);
+  left: clamp(0.75rem, 1.5vw, 1.25rem);
+  z-index: 2;
+  display: inline-block;
+  padding: 0.25rem 0.55rem;
+  transform: rotate(-7deg);
+  border: 3px solid #000000;
+  background: var(--color-comic-magenta);
+  color: #ffffff;
+  font-family: var(--font-comic), "Bangers", cursive;
+  font-size: clamp(0.9rem, 1.7vw, 1.25rem);
+  font-style: italic;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #000000;
+  box-shadow: 4px 4px 0 #000000;
+}
+
+.project-panel-copy {
+  position: absolute;
+  right: clamp(2.5rem, 9vw, 9rem);
+  top: 50%;
+  z-index: 2;
+  width: min(34rem, 48%);
+  text-align: right;
+  transform: translateY(-50%);
+}
+
+.project-panel-title {
+  max-width: 100%;
+  font-size: clamp(1.55rem, 3.4vw, 3.55rem);
+  overflow-wrap: anywhere;
+}
+
+.project-panel-copy p {
+  max-width: 100%;
+  margin-top: clamp(0.6rem, 1.5vw, 1.2rem);
+  color: #ffffff;
+  font-family: var(--font-comic-body), "Comic Neue", cursive;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.35;
+  opacity: 0;
+  text-shadow: 2px 2px 0 #000000;
+  transform: translateY(1rem);
+  transition:
+    opacity 260ms ease,
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.blank-comic-panel:hover .project-panel-copy p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.blank-comic-page:has(.blank-comic-panel-1:hover) {
+  grid-template-columns: 1.45fr 1.75fr;
+  grid-template-rows: 1.45fr 0.95fr 0.85fr;
+}
+
+.blank-comic-page:has(.blank-comic-panel-2:hover) {
+  grid-template-columns: 0.75fr 2.45fr;
+  grid-template-rows: 1.45fr 0.95fr 0.85fr;
+}
+
+.blank-comic-page:has(.blank-comic-panel-3:hover) {
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 0.7fr 1.7fr 0.8fr;
+}
+
+.blank-comic-page:has(.blank-comic-panel-4:hover) {
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 0.75fr 0.9fr 1.65fr;
+}
+
+.blank-comic-panel-1 {
+  grid-column: 1;
+  grid-row: 1;
+  clip-path: polygon(0 0, 96% 0, 86% 100%, 0 97%);
+}
+
+.blank-comic-panel-2 {
+  grid-column: 2;
+  grid-row: 1;
+  clip-path: polygon(3% 0, 100% 0, 100% 100%, 0 96%);
+}
+
+.blank-comic-panel-3 {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  clip-path: polygon(0 4%, 100% 0, 99% 94%, 0 100%);
+}
+
+.blank-comic-panel-4 {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  clip-path: polygon(0 3%, 100% 0, 100% 100%, 0 100%);
+}
+
+@media (max-width: 640px) {
+  .blank-comic-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, minmax(12rem, 1fr));
+  }
+
+  .blank-comic-panel,
+  .blank-comic-panel-1,
+  .blank-comic-panel-2,
+  .blank-comic-panel-3,
+  .blank-comic-panel-4 {
+    grid-column: 1;
+    grid-row: auto;
+    clip-path: none;
+  }
+
+  .project-panel-copy {
+    top: auto;
+    right: clamp(1rem, 5vw, 1.5rem);
+    bottom: clamp(1rem, 5vw, 1.5rem);
+    left: clamp(1rem, 5vw, 1.5rem);
+    width: auto;
+    text-align: left;
+    transform: none;
+  }
+}
+
+.project-showcase-section {
+  min-height: 100vh;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+.skills-profile-section {
+  position: relative;
+  min-height: 100vh;
+  padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 4vw, 4rem);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 34%, rgba(78, 205, 196, 0.35), transparent 26%),
+    radial-gradient(circle at 85% 18%, rgba(255, 217, 61, 0.28), transparent 22%),
+    linear-gradient(135deg, #5c20bd 0%, #1e5bcb 100%);
+}
+
+.skills-profile-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, rgba(0, 0, 0, 0.22) 1px, transparent 1px),
+    repeating-linear-gradient(105deg, transparent 0 42px, rgba(0, 0, 0, 0.18) 43px 50px, transparent 51px 92px);
+  background-size: 5px 5px, auto;
+  opacity: 0.65;
+}
+
+.skills-profile-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(88deg, transparent 0 10%, #000000 10.3% 10.8%, transparent 11.1% 84%, #000000 84.2% 84.7%, transparent 85%),
+    linear-gradient(174deg, transparent 0 26%, rgba(0, 0, 0, 0.5) 26.2% 26.8%, transparent 27%);
+  opacity: 0.55;
+}
+
+.skills-profile-villain {
+  background:
+    radial-gradient(circle at 18% 40%, rgba(122, 0, 0, 0.42), transparent 30%),
+    radial-gradient(circle at 85% 24%, rgba(92, 0, 138, 0.35), transparent 25%),
+    linear-gradient(135deg, #090909 0%, #240000 52%, #050505 100%);
+}
+
+.skills-profile-villain::before {
+  background:
+    radial-gradient(circle, rgba(122, 0, 0, 0.36) 1px, transparent 1px),
+    repeating-linear-gradient(110deg, transparent 0 36px, rgba(122, 0, 0, 0.22) 37px 44px, transparent 45px 86px);
+  opacity: 0.85;
+}
+
+.skills-profile-inner {
+  position: relative;
+  z-index: 2;
+  width: min(92rem, 100%);
+  margin: 0 auto;
+}
+
+.skills-profile-title-line {
+  width: clamp(5rem, 12vw, 9rem);
+  height: clamp(0.2rem, 0.45vw, 0.35rem);
+  margin: clamp(0.75rem, 1.3vw, 1.1rem) auto 0;
+  background: var(--color-comic-yellow);
+  box-shadow: 0.18rem 0.18rem 0 #7a0000;
+}
+
+.skills-profile-grid {
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.9fr) minmax(22rem, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  margin-top: clamp(3rem, 6vw, 5rem);
+}
+
+.skills-character-panel {
+  position: relative;
+  min-height: clamp(34rem, 62vw, 48rem);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  border: clamp(0.25rem, 0.6vw, 0.45rem) solid #000000;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 217, 61, 0.34), transparent 32%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.45));
+  clip-path: polygon(5% 0, 100% 4%, 94% 100%, 0 96%);
+  box-shadow: 1rem 1rem 0 #000000;
+}
+
+.skills-profile-villain .skills-character-panel {
+  background:
+    radial-gradient(circle at 48% 42%, rgba(122, 0, 0, 0.52), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.82));
+  box-shadow: 1rem 1rem 0 #3a0000;
+}
+
+.skills-character-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.18) 1px, transparent 1px);
+  background-size: 6px 6px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.skills-character-image {
+  position: relative;
+  z-index: 2;
+  width: min(95%, 34rem);
+  max-height: 48rem;
+  object-fit: contain;
+  filter: drop-shadow(1rem 1rem 0 rgba(0, 0, 0, 0.45));
+}
+
+.skills-profile-villain .skills-character-image {
+  filter:
+    contrast(1.14)
+    saturate(0.82)
+    drop-shadow(1rem 1rem 0 rgba(122, 0, 0, 0.55));
+}
+
+.skills-stat-stack {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.35rem);
+}
+
+.skills-loading {
+  color: var(--color-comic-yellow);
+  font-family: var(--font-comic), "Bangers", cursive;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  text-align: center;
+  text-shadow: 3px 3px 0 #000000;
+}
+
+.skill-stat-row {
+  --stat-fill: #ed1d24;
+  --stat-track: rgba(255, 255, 255, 0.58);
+  display: grid;
+  grid-template-columns: clamp(5.5rem, 10vw, 7.5rem) 1fr;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: center;
+  padding: clamp(0.8rem, 1.8vw, 1.2rem);
+  border: 4px solid #000000;
+  background: rgba(12, 22, 44, 0.86);
+  box-shadow: 0.45rem 0.45rem 0 #000000;
+  clip-path: polygon(2% 0, 100% 0, 97% 100%, 0 94%);
+}
+
+.skills-profile-villain .skill-stat-row {
+  --stat-fill: #7a0000;
+  --stat-track: rgba(255, 255, 255, 0.2);
+  background: rgba(5, 5, 5, 0.9);
+  border-color: #3a0000;
+  box-shadow: 0.45rem 0.45rem 0 #000000;
+}
+
+.skill-stat-ring {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.skill-stat-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.skill-stat-track,
+.skill-stat-fill {
+  fill: none;
+  stroke-width: 17;
+}
+
+.skill-stat-track {
+  stroke: var(--stat-track);
+}
+
+.skill-stat-fill {
+  stroke: var(--stat-fill);
+}
+
+.skill-stat-ring span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  font-family: var(--font-comic), "Bangers", cursive;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  text-shadow: 3px 3px 0 #000000;
+}
+
+.skill-stat-copy h3 {
+  color: var(--color-comic-yellow);
+  font-family: var(--font-comic), "Bangers", cursive;
+  font-size: clamp(1.8rem, 4vw, 3.3rem);
+  font-style: italic;
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-shadow:
+    3px 3px 0 #000000,
+    5px 5px 0 #7a0000;
+  -webkit-text-stroke: 1px #000000;
+}
+
+.skill-stat-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.skill-stat-tags span {
+  display: inline-block;
+  padding: 0.28rem 0.55rem;
+  border: 2px solid #000000;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-family: var(--font-comic), "Bangers", cursive;
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  letter-spacing: 0;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0 #000000;
+}
+
+.skills-profile-villain .skill-stat-tags span {
+  background: rgba(122, 0, 0, 0.26);
+  color: #d7d7d7;
+}
+
+@media (max-width: 900px) {
+  .skills-profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skills-character-panel {
+    min-height: clamp(24rem, 90vw, 36rem);
+  }
+}
+
+@media (max-width: 560px) {
+  .skill-stat-row {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .skill-stat-ring {
+    width: 8rem;
+    margin: 0 auto;
+  }
+
+  .skill-stat-tags {
+    justify-content: center;
+  }
+}
+
+.project-showcase-shell {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-showcase-shell > .text-center {
+  position: absolute;
+  top: clamp(2rem, 5vw, 4rem);
+  left: 50%;
+  z-index: 8;
+  width: min(90vw, 46rem);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.comic-page-grid::before {
+  content: "";
+  position: absolute;
+  inset: -1.5rem -2rem;
+  z-index: -1;
+  background:
+    linear-gradient(91deg, transparent 0 31%, rgba(0,0,0,0.92) 31.2% 31.85%, transparent 32%),
+    linear-gradient(88deg, transparent 0 65%, rgba(0,0,0,0.86) 65.2% 65.8%, transparent 66%),
+    linear-gradient(3deg, transparent 0 48%, rgba(0,0,0,0.65) 48.2% 48.85%, transparent 49%);
+  pointer-events: none;
+}
+
+.dark .comic-page-grid::before {
+  background:
+    linear-gradient(91deg, transparent 0 31%, rgba(122,0,0,0.9) 31.2% 31.85%, transparent 32%),
+    linear-gradient(88deg, transparent 0 65%, rgba(0,0,0,0.96) 65.2% 65.8%, transparent 66%),
+    linear-gradient(3deg, transparent 0 48%, rgba(122,0,0,0.68) 48.2% 48.85%, transparent 49%);
+}
+
+.comic-page-cell:nth-child(3n + 1) {
+  transform-origin: 24% 12%;
+}
+
+.comic-page-cell:nth-child(3n + 2) {
+  transform-origin: 80% 20%;
+}
+
+.project-comic-layout {
+  position: relative;
+  display: grid;
+  flex: 1;
+  min-height: 100vh;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: 0.9fr 1.15fr 0.95fr;
+  gap: clamp(0.45rem, 0.8vw, 0.8rem);
+  padding: clamp(0.45rem, 0.8vw, 0.8rem);
+  padding-top: clamp(7.5rem, 12vw, 10rem);
+  align-items: stretch;
+  background: var(--color-comic-ink);
+  isolation: isolate;
+}
+
+.project-comic-layout::before,
+.project-comic-layout::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.project-comic-layout::before {
+  background:
+    radial-gradient(circle at 12% 15%, rgba(255,217,61,0.2), transparent 18%),
+    radial-gradient(circle at 86% 18%, rgba(255,22,117,0.22), transparent 20%);
+}
+
+.project-comic-layout::after {
+  background:
+    repeating-linear-gradient(118deg, transparent 0 28px, rgba(255,217,61,0.09) 29px, transparent 31px);
+  opacity: 0.85;
+}
+
+.project-comic-panel {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  transition:
+    transform 0.28s ease,
+    filter 0.28s ease,
+    z-index 0.28s ease;
+}
+
+.project-comic-panel:hover {
+  z-index: 6;
+  filter: saturate(1.16) contrast(1.08);
+}
+
+.project-comic-panel .comic-story-card {
+  min-height: 100%;
+  height: 100%;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+.project-comic-panel .comic-story-card > .p-6 {
+  min-height: 100%;
+}
+
+.project-comic-panel-1 {
+  grid-column: 1 / span 2;
+  grid-row: 1;
+}
+
+.project-comic-panel-1 .comic-story-card {
+  clip-path: polygon(0 0, 96% 0, 86% 100%, 0 96%);
+}
+
+.project-comic-panel-2 {
+  grid-column: 3 / span 4;
+  grid-row: 1;
+}
+
+.project-comic-panel-2 .comic-story-card {
+  clip-path: polygon(2% 0, 100% 0, 100% 100%, 0 94%);
+}
+
+.project-comic-panel-3 {
+  grid-column: 1 / span 6;
+  grid-row: 2;
+}
+
+.project-comic-panel-3 .comic-story-card {
+  clip-path: polygon(0 4%, 100% 0, 98% 92%, 0 100%);
+}
+
+.project-comic-panel-4 {
+  grid-column: 1 / span 2;
+  grid-row: 3;
+}
+
+.project-comic-panel-4 .comic-story-card {
+  clip-path: polygon(0 0, 96% 4%, 100% 100%, 0 100%);
+}
+
+.project-comic-panel-5 {
+  grid-column: 3 / span 2;
+  grid-row: 3;
+}
+
+.project-comic-panel-5 .comic-story-card {
+  clip-path: polygon(5% 3%, 100% 0, 94% 100%, 0 100%);
+}
+
+.project-comic-panel-6 {
+  grid-column: 5 / span 2;
+  grid-row: 3;
+}
+
+.project-comic-panel-6 .comic-story-card {
+  clip-path: polygon(6% 0, 100% 4%, 100% 100%, 0 100%);
+}
+
+.project-comic-panel:hover .comic-story-card {
+  transform: scale(1.035);
+  filter: brightness(1.08);
+}
+
+.dark .project-comic-layout::before {
+  background:
+    radial-gradient(circle at 12% 15%, rgba(122,0,0,0.32), transparent 18%),
+    radial-gradient(circle at 86% 18%, rgba(60,0,95,0.28), transparent 20%);
+}
+
+.dark .project-comic-layout::after {
+  background:
+    repeating-linear-gradient(118deg, transparent 0 28px, rgba(122,0,0,0.14) 29px, transparent 31px);
+}
+
+.dark .project-comic-panel:hover .comic-story-card {
+  filter: brightness(1.12) contrast(1.08);
+}
+
+@media (min-width: 1024px) {
+  .project-comic-layout:has(.project-comic-panel-1:hover) {
+    grid-template-columns: 1.22fr 1.08fr 0.95fr 0.95fr 0.9fr 0.9fr;
+  }
+
+  .project-comic-layout:has(.project-comic-panel-2:hover) {
+    grid-template-columns: 0.9fr 0.9fr 1.08fr 1.08fr 1.08fr 1.08fr;
+  }
+
+  .project-comic-layout:has(.project-comic-panel-3:hover) {
+    grid-template-rows: 0.78fr 1.42fr 0.8fr;
+  }
+}
+
+@media (max-width: 1023px) {
+  .project-showcase-section {
+    min-height: auto;
+  }
+
+  .project-showcase-shell {
+    min-height: auto;
+  }
+
+  .project-comic-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(24rem, auto);
+  }
+
+  .project-comic-panel,
+  .project-comic-panel-1,
+  .project-comic-panel-2,
+  .project-comic-panel-3,
+  .project-comic-panel-4,
+  .project-comic-panel-5,
+  .project-comic-panel-6 {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .project-comic-layout {
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(24rem, auto);
+  }
+
+  .project-comic-panel,
+  .project-comic-panel-1,
+  .project-comic-panel-2,
+  .project-comic-panel-3,
+  .project-comic-panel-4,
+  .project-comic-panel-5,
+  .project-comic-panel-6 {
+    min-height: 24rem;
+  }
+}
+
+.comic-story-card,
+.comic-skill-card {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, rgba(22,33,62,0.98), rgba(11,13,48,0.98)),
+    var(--color-comic-panel-bg);
+  border: 4px solid var(--color-comic-ink);
+  border-radius: 4px;
+  box-shadow:
+    7px 7px 0 var(--color-comic-ink),
+    12px 12px 0 rgba(255,217,61,0.65);
+}
+
+.dark .comic-story-card,
+.dark .comic-skill-card,
+.dark .comic-card {
+  background:
+    linear-gradient(145deg, rgba(8,9,19,0.99), rgba(20,0,3,0.97)),
+    #070812;
+  border-color: #520000;
+  box-shadow:
+    7px 7px 0 #000000,
+    12px 12px 0 rgba(122,0,0,0.7);
+}
+
+.comic-story-card::before,
+.comic-skill-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,22,117,0.08), transparent 35%, rgba(0,217,255,0.1));
+  background-size: 5px 5px, 100% 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dark .comic-story-card::before,
+.dark .comic-skill-card::before,
+.dark .comic-card::after {
+  background:
+    radial-gradient(circle, rgba(122,0,0,0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(122,0,0,0.16), transparent 35%, rgba(60,0,95,0.15));
+  background-size: 5px 5px, 100% 100%;
+}
+
+.comic-story-card > *,
+.comic-skill-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.comic-panel-number {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  min-width: 2.25rem;
+  padding: 0.25rem 0.45rem;
+  background: var(--color-comic-yellow);
+  color: var(--color-comic-ink);
+  border: 2px solid var(--color-comic-ink);
+  font-family: var(--font-comic), "Bangers", cursive;
+  font-size: 0.95rem;
+  line-height: 1;
+  text-align: center;
+  box-shadow: 2px 2px 0 var(--color-comic-ink);
+}
+
+.comic-action-tag {
+  position: absolute;
+  top: 0.95rem;
+  left: 0.75rem;
+  z-index: 2;
+  transform: rotate(-8deg);
+  background: var(--color-comic-magenta);
+  color: var(--color-comic-white);
+  border: 2px solid var(--color-comic-ink);
+  padding: 0.15rem 0.55rem;
+  font-family: var(--font-comic), "Bangers", cursive;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  box-shadow: 2px 2px 0 var(--color-comic-ink);
+}
+
+.comic-speed-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  background:
+    repeating-linear-gradient(35deg, transparent 0 14px, rgba(255,217,61,0.1) 15px, transparent 17px),
+    radial-gradient(circle at 85% 20%, rgba(255,255,255,0.2), transparent 20%);
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.comic-story-card:hover .comic-speed-wash {
+  opacity: 1;
+}
+
+.comic-skill-strip {
+  position: relative;
+  display: grid;
+  gap: clamp(1.35rem, 3vw, 2rem);
+  padding: 0.75rem 0;
+}
+
+.comic-skill-strip::before {
+  content: "";
+  position: absolute;
+  inset: -1rem -2rem;
+  z-index: -1;
+  background:
+    linear-gradient(96deg, transparent 0 8%, rgba(0,0,0,0.88) 8.2% 8.85%, transparent 9%),
+    linear-gradient(84deg, transparent 0 92%, rgba(0,0,0,0.82) 92.15% 92.85%, transparent 93%),
+    repeating-linear-gradient(0deg, transparent 0 8.25rem, rgba(0,0,0,0.88) 8.25rem 8.75rem, transparent 8.75rem 10.5rem);
+  pointer-events: none;
+}
+
+.dark .comic-skill-strip::before {
+  background:
+    linear-gradient(96deg, transparent 0 8%, rgba(0,0,0,0.96) 8.2% 8.85%, transparent 9%),
+    linear-gradient(84deg, transparent 0 92%, rgba(122,0,0,0.82) 92.15% 92.85%, transparent 93%),
+    repeating-linear-gradient(0deg, transparent 0 8.25rem, rgba(0,0,0,0.96) 8.25rem 8.75rem, transparent 8.75rem 10.5rem);
+}
+
+.comic-skill-card {
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.comic-skill-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(178deg, transparent 0 49%, rgba(255,255,255,0.05) 49.2% 49.7%, transparent 50%),
+    linear-gradient(92deg, transparent 0 12%, rgba(0,0,0,0.24) 12.2% 12.8%, transparent 13%);
+  pointer-events: none;
+}
+
+.comic-skill-strip > div:nth-child(odd) .comic-skill-card {
+  clip-path: polygon(0 3%, 100% 0, 98% 100%, 2% 97%);
+}
+
+.comic-skill-strip > div:nth-child(even) .comic-skill-card {
+  clip-path: polygon(2% 0, 98% 4%, 100% 96%, 0 100%);
+}
+
+.comic-mini-burst {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+  height: 2.3rem;
+  color: var(--color-comic-ink);
+  background: var(--color-comic-yellow);
+  border: 2px solid var(--color-comic-ink);
+  font-family: var(--font-comic), "Bangers", cursive;
+  font-size: 1rem;
+  box-shadow: 3px 3px 0 var(--color-comic-ink);
+  clip-path: polygon(50% 0, 61% 22%, 86% 11%, 78% 38%, 100% 50%, 78% 62%, 86% 89%, 61% 78%, 50% 100%, 39% 78%, 14% 89%, 22% 62%, 0 50%, 22% 38%, 14% 11%, 39% 22%);
+}
+
+@media (min-width: 768px) {
+  .comic-sfx {
+    display: inline-flex;
+  }
+}
+
+/* ==========================================================================
+   SPIDER-VERSE DIAGONAL PANEL CUTS
+   ========================================================================== */
+
+/* Flat Top, Slant DOWN Bottom */
+.comic-panel-1 {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 4vw));
+}
+
+/* Slant DOWN Top, Slant UP Bottom */
+.comic-panel-2 {
+  clip-path: polygon(0 0, 100% 4vw, 100% calc(100% - 4vw), 0 100%);
+  margin-top: calc(-4vw + 12px); /* 12px creates the thick black gap */
+}
+
+/* Slant UP Top, Slant DOWN Bottom */
+.comic-panel-3 {
+  clip-path: polygon(0 4vw, 100% 0, 100% 100%, 0 calc(100% - 4vw));
+  margin-top: calc(-4vw + 12px);
+}
+
+/* Slant DOWN Top, Slant UP Bottom */
+.comic-panel-4 {
+  clip-path: polygon(0 0, 100% 4vw, 100% calc(100% - 4vw), 0 100%);
+  margin-top: calc(-4vw + 12px);
+}
+
+/* Slant UP Top, Flat Bottom */
+.comic-panel-5 {
+  clip-path: polygon(0 4vw, 100% 0, 100% 100%, 0 100%);
+  margin-top: calc(-4vw + 12px);
 }

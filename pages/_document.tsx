@@ -1,7 +1,7 @@
 import { Html, Head, Main, NextScript } from "next/document";
 import clsx from "clsx";
 
-import { fontSans } from "@/config/fonts";
+import { fontSans, fontComic, fontComicBody } from "@/config/fonts";
 
 export default function Document() {
   return (
@@ -9,8 +9,10 @@ export default function Document() {
       <Head />
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-background font-comic-body antialiased",
           fontSans.variable,
+          fontComic.variable,
+          fontComicBody.variable,
         )}
       >
         <Main />

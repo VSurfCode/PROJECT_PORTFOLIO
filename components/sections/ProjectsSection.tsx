@@ -1,261 +1,74 @@
-import type { Project, Skill } from "@/types/portfolio";
-
-import { useEffect, useState } from "react";
-import { Button } from "@heroui/button";
-import { Chip } from "@heroui/chip";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-} from "@heroui/modal";
-import { motion } from "motion/react";
-
-import { GlassCard, NeonButton } from "@/components/ui";
-import { supabase } from "@/lib/supabase/client";
-
-interface ProjectWithSkills extends Project {
-  skills: Skill[];
-}
+const featuredProjects = [
+  {
+    description:
+      "A trust-first social discovery app where every connection is explained through real mutual friends!",
+    imageAlt: "Grapevine project artwork",
+    imageClassName: "project-panel-image-cover",
+    imageSrc: "/upscaled.png",
+    kicker: "Pow",
+    theme: "project-panel-theme-grapevine",
+    title: "Grapevine",
+  },
+  {
+    description:
+      "AI Service Booking & Admin Dashboard. Your personal tech repair crew!",
+    imageAlt: "Nerdherd project logo",
+    imageClassName: "project-panel-image-contain",
+    imageSrc: "/NerdHerdNewLogo.svg",
+    kicker: "Zap",
+    theme: "project-panel-theme-nerdherd",
+    title: "Nerdherd",
+  },
+  {
+    description:
+      "An AI Tutoring Platform making education personalized and extremely powerful.",
+    imageAlt: "Tutorcraft project artwork",
+    imageClassName: "project-panel-image-contain",
+    imageSrc: "/tutorcraft.png",
+    kicker: "Bam",
+    theme: "project-panel-theme-tutorcraft",
+    title: "Tutorcraft",
+  },
+  {
+    description:
+      "Gamify your existence! A goal tracking and life progression system.",
+    imageAlt: "Project Life project artwork",
+    imageClassName: "project-panel-image-contain",
+    imageSrc: "/pl.png",
+    kicker: "Thwip",
+    theme: "project-panel-theme-life",
+    title: "Project Life",
+  },
+];
 
 export default function ProjectsSection() {
-  const [projects, setProjects] = useState<ProjectWithSkills[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedProject, setSelectedProject] =
-    useState<ProjectWithSkills | null>(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  const fetchProjects = async () => {
-    try {
-      const { data: projectsData, error: projectsError } = await supabase
-        .from("projects")
-        .select("*")
-        .eq("featured", true)
-        .order("display_order", { ascending: true });
-
-      if (projectsError) throw projectsError;
-
-      const projectsWithSkills = await Promise.all(
-        (projectsData || []).map(async (project) => {
-          const { data: skillsData } = await supabase
-            .from("project_skills")
-            .select("skills(*)")
-            .eq("project_id", project.id);
-
-          return {
-            ...project,
-            skills: (skillsData || [])
-              .map((ps: any) => ps.skills)
-              .filter(Boolean),
-          };
-        }),
-      );
-
-      setProjects(projectsWithSkills);
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleProjectClick = (project: ProjectWithSkills) => {
-    setSelectedProject(project);
-    onOpen();
-  };
-
-  if (loading) {
-    return (
-      <section className="py-20 px-6" id="projects">
-        <div className="max-w-7xl mx-auto">
-          <div className="animate-pulse text-center">Loading projects...</div>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <>
-      <section className="py-20 px-6" id="projects">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            className="text-4xl md:text-5xl font-bold text-center mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            viewport={{ once: false, margin: "-100px" }}
-            whileInView={{ opacity: 1, y: 0 }}
+    <section className="blank-comic-section" id="projects">
+      <div className="blank-comic-title-strip">
+        <h2 className="blank-comic-title">Featured Projects</h2>
+        <div className="blank-comic-title-underline" />
+      </div>
+      <div aria-label="Blank comic layout" className="blank-comic-page">
+        {featuredProjects.map((project, index) => (
+          <article
+            key={project.title}
+            className={`blank-comic-panel blank-comic-panel-${index + 1} ${project.theme}`}
           >
-            Featured Projects
-          </motion.h2>
-          <div className="flex flex-wrap justify-center gap-6">
-            {projects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                className="w-full max-w-md md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
-                initial={{ opacity: 0, y: 50 }}
-                transition={{
-                  duration: 0.5,
-                  delay: index * 0.1,
-                  ease: "easeOut",
-                }}
-                viewport={{ once: false, margin: "-50px" }}
-                whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                whileInView={{ opacity: 1, y: 0 }}
-              >
-                <GlassCard
-                  hover
-                  isPressable
-                  className="cursor-pointer h-full flex flex-col min-h-[400px]"
-                  glow={false}
-                  onPress={() => handleProjectClick(project)}
-                >
-                  <div className="p-6 flex flex-col flex-1 space-y-4">
-                    <h3 className="text-2xl font-semibold">{project.title}</h3>
-                    <p className="text-default-600 flex-1">
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tech_stack.slice(0, 4).map((tech, idx) => (
-                        <Chip
-                          key={idx}
-                          color="primary"
-                          size="sm"
-                          variant="flat"
-                        >
-                          {tech}
-                        </Chip>
-                      ))}
-                      {project.tech_stack.length > 4 && (
-                        <Chip size="sm" variant="flat">
-                          +{project.tech_stack.length - 4}
-                        </Chip>
-                      )}
-                    </div>
-                    <div className="mt-auto">
-                      {project.live_url && (
-                        <NeonButton
-                          as="a"
-                          className="w-full"
-                          href={project.live_url.startsWith('http') ? project.live_url : `https://${project.live_url}`}
-                          rel="noopener noreferrer"
-                          size="sm"
-                          target="_blank"
-                          variant="bordered"
-                        >
-                          View Live
-                        </NeonButton>
-                      )}
-                    </div>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <Modal
-        classNames={{
-          base: "bg-background/95 backdrop-blur-md border border-default-200 dark:border-default-700",
-          backdrop: "bg-black/70 backdrop-blur-sm",
-          header: "border-b border-default-200 dark:border-default-700",
-          body: "py-6",
-          footer: "border-t border-default-200 dark:border-default-700",
-        }}
-        isOpen={isOpen}
-        scrollBehavior="inside"
-        size="3xl"
-        onClose={onClose}
-      >
-        <ModalContent>
-          {selectedProject && (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                <h3 className="text-2xl font-bold text-foreground">
-                  {selectedProject.title}
-                </h3>
-                <p className="text-default-500">
-                  {selectedProject.description}
-                </p>
-              </ModalHeader>
-              <ModalBody className="space-y-6">
-                {selectedProject.long_description && (
-                  <p className="text-foreground">
-                    {selectedProject.long_description}
-                  </p>
-                )}
-                <div>
-                  <h4 className="font-semibold mb-2 text-foreground">
-                    Tech Stack
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedProject.tech_stack.map((tech, idx) => (
-                      <Chip key={idx} color="primary" size="sm" variant="flat">
-                        {tech}
-                      </Chip>
-                    ))}
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2 text-primary">Problem</h4>
-                    <p className="text-foreground">
-                      {selectedProject.story_problem}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-primary">
-                      Decisions
-                    </h4>
-                    <p className="text-foreground">
-                      {selectedProject.story_decisions}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-primary">Result</h4>
-                    <p className="text-foreground">
-                      {selectedProject.story_result}
-                    </p>
-                  </div>
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                {selectedProject.live_url && (
-                  <NeonButton
-                    glow
-                    as="a"
-                    href={selectedProject.live_url.startsWith('http') ? selectedProject.live_url : `https://${selectedProject.live_url}`}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    View Live
-                  </NeonButton>
-                )}
-                {selectedProject.github_url && (
-                  <Button
-                    as="a"
-                    href={selectedProject.github_url.startsWith('http') ? selectedProject.github_url : `https://${selectedProject.github_url}`}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    variant="bordered"
-                  >
-                    GitHub
-                  </Button>
-                )}
-                <Button variant="light" onPress={onClose}>
-                  Close
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
+            <img
+              alt={project.imageAlt}
+              className={`project-panel-image ${project.imageClassName}`}
+              src={project.imageSrc}
+            />
+            <span className="project-panel-kicker">{project.kicker}</span>
+            <div className="project-panel-copy">
+              <h3 className="comic-heading project-panel-title">
+                {project.title}
+              </h3>
+              <p>{project.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
