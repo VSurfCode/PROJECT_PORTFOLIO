@@ -907,7 +907,8 @@ h1, h2, h3, h4, h5, h6 {
 .project-panel-title {
   max-width: 100%;
   font-size: clamp(1.55rem, 3.4vw, 3.55rem);
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  white-space: nowrap;
 }
 
 .project-panel-copy p {
@@ -955,6 +956,19 @@ h1, h2, h3, h4, h5, h6 {
   grid-column: 1;
   grid-row: 1;
   clip-path: polygon(0 0, 96% 0, 86% 100%, 0 97%);
+}
+
+.blank-comic-panel-1 .project-panel-copy {
+  top: clamp(1.2rem, 4vw, 2.1rem);
+  right: auto;
+  left: clamp(4rem, 7vw, 7.5rem);
+  width: min(22rem, 62%);
+  text-align: left;
+  transform: none;
+}
+
+.blank-comic-panel-1 .project-panel-title {
+  font-size: clamp(1.6rem, 3vw, 3.1rem);
 }
 
 .blank-comic-panel-2 {

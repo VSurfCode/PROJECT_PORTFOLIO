@@ -8,6 +8,7 @@ const featuredProjects = [
     kicker: "Pow",
     theme: "project-panel-theme-grapevine",
     title: "Grapevine",
+    url: "https://www.foafapp.com",
   },
   {
     description:
@@ -18,6 +19,7 @@ const featuredProjects = [
     kicker: "Zap",
     theme: "project-panel-theme-nerdherd",
     title: "Nerdherd",
+    url: "https://project-nerd.onrender.com",
   },
   {
     description:
@@ -28,6 +30,7 @@ const featuredProjects = [
     kicker: "Bam",
     theme: "project-panel-theme-tutorcraft",
     title: "Tutorcraft",
+    url: "https://project-cypher-1.onrender.com",
   },
   {
     description:
@@ -38,6 +41,7 @@ const featuredProjects = [
     kicker: "Thwip",
     theme: "project-panel-theme-life",
     title: "Project Life",
+    url: "https://project-life-1.onrender.com",
   },
 ];
 
@@ -50,9 +54,13 @@ export default function ProjectsSection() {
       </div>
       <div aria-label="Blank comic layout" className="blank-comic-page">
         {featuredProjects.map((project, index) => (
-          <article
+          <a
             key={project.title}
+            aria-label={`Open ${project.title} in a new tab`}
             className={`blank-comic-panel blank-comic-panel-${index + 1} ${project.theme}`}
+            href={project.url}
+            rel="noopener noreferrer"
+            target="_blank"
           >
             <img
               alt={project.imageAlt}
@@ -66,7 +74,7 @@ export default function ProjectsSection() {
               </h3>
               <p>{project.description}</p>
             </div>
-          </article>
+          </a>
         ))}
       </div>
     </section>
