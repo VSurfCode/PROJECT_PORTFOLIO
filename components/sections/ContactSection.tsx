@@ -8,12 +8,7 @@ import { supabase } from "@/lib/supabase/client";
 export default function ContactSection() {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [submitting, setSubmitting] = useState(false);
+
 
   useEffect(() => {
     fetchPersonalInfo();
@@ -37,20 +32,7 @@ export default function ContactSection() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
 
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Message sent! (This is a demo - form submission not implemented)");
-      setFormData({ name: "", email: "", message: "" });
-    } catch (error) {
-      alert("Failed to send message");
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   if (loading) {
     return (
@@ -92,7 +74,7 @@ export default function ContactSection() {
         <div className="flex flex-wrap justify-center gap-8 items-stretch">
           {/* Contact Info Card */}
           <motion.div
-            className="w-full md:w-[calc(50%-16px)] max-w-md flex"
+            className="w-full max-w-2xl flex"
             initial={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
             viewport={{ once: false, margin: "-50px" }}
@@ -108,7 +90,7 @@ export default function ContactSection() {
                   border: "2px solid var(--color-comic-ink)",
                 }}
               >
-                📬 INFO
+                INFO
               </div>
 
               <div className="pt-8 space-y-5 flex-1 relative z-[1]">
@@ -198,122 +180,7 @@ export default function ContactSection() {
             </div>
           </motion.div>
 
-          {/* Contact Form Card */}
-          <motion.div
-            className="w-full md:w-[calc(50%-16px)] max-w-md flex"
-            initial={{ opacity: 0, x: 50 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            viewport={{ once: false, margin: "-50px" }}
-            whileInView={{ opacity: 1, x: 0 }}
-          >
-            <div className="comic-card w-full flex flex-col">
-              {/* Panel label */}
-              <div
-                className="absolute top-3 left-3 px-2 py-0.5 font-comic text-xs z-[2]"
-                style={{
-                  background: "var(--color-comic-orange)",
-                  color: "var(--color-comic-ink)",
-                  border: "2px solid var(--color-comic-ink)",
-                }}
-              >
-                ✉️ MESSAGE
-              </div>
 
-              <form
-                className="pt-8 space-y-4 flex flex-col flex-1 relative z-[1]"
-                onSubmit={handleSubmit}
-              >
-                {/* Name input */}
-                <div>
-                  <label
-                    className="font-comic text-xs tracking-wider block mb-1"
-                    htmlFor="contact-name"
-                    style={{ color: "rgba(255,255,255,0.5)" }}
-                  >
-                    NAME *
-                  </label>
-                  <input
-                    required
-                    className="w-full px-4 py-2.5 font-comic-body font-bold rounded-none outline-none transition-all focus:translate-x-[-2px] focus:translate-y-[-2px]"
-                    id="contact-name"
-                    style={{
-                      background: "rgba(255,255,255,0.08)",
-                      border: "2px solid var(--color-comic-ink)",
-                      boxShadow: "2px 2px 0px var(--color-comic-ink)",
-                      color: "white",
-                    }}
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                  />
-                </div>
-
-                {/* Email input */}
-                <div>
-                  <label
-                    className="font-comic text-xs tracking-wider block mb-1"
-                    htmlFor="contact-email"
-                    style={{ color: "rgba(255,255,255,0.5)" }}
-                  >
-                    EMAIL *
-                  </label>
-                  <input
-                    required
-                    className="w-full px-4 py-2.5 font-comic-body font-bold rounded-none outline-none transition-all focus:translate-x-[-2px] focus:translate-y-[-2px]"
-                    id="contact-email"
-                    style={{
-                      background: "rgba(255,255,255,0.08)",
-                      border: "2px solid var(--color-comic-ink)",
-                      boxShadow: "2px 2px 0px var(--color-comic-ink)",
-                      color: "white",
-                    }}
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                  />
-                </div>
-
-                {/* Message textarea */}
-                <div className="flex-1 flex flex-col">
-                  <label
-                    className="font-comic text-xs tracking-wider block mb-1"
-                    htmlFor="contact-message"
-                    style={{ color: "rgba(255,255,255,0.5)" }}
-                  >
-                    MESSAGE *
-                  </label>
-                  <textarea
-                    required
-                    className="w-full px-4 py-2.5 font-comic-body font-bold rounded-none outline-none resize-none flex-1 min-h-[120px] transition-all focus:translate-x-[-2px] focus:translate-y-[-2px]"
-                    id="contact-message"
-                    style={{
-                      background: "rgba(255,255,255,0.08)",
-                      border: "2px solid var(--color-comic-ink)",
-                      boxShadow: "2px 2px 0px var(--color-comic-ink)",
-                      color: "white",
-                    }}
-                    value={formData.message}
-                    onChange={(e) =>
-                      setFormData({ ...formData, message: e.target.value })
-                    }
-                  />
-                </div>
-
-                {/* Submit */}
-                <button
-                  className="comic-btn comic-btn-primary w-full mt-auto"
-                  disabled={submitting}
-                  type="submit"
-                >
-                  {submitting ? "SENDING..." : "SEND MESSAGE 💬"}
-                </button>
-              </form>
-            </div>
-          </motion.div>
         </div>
       </div>
     </section>

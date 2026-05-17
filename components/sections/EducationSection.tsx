@@ -97,7 +97,7 @@ export default function EducationSection() {
                     border: "2px solid var(--color-comic-ink)",
                   }}
                 >
-                  📚 EDU
+                  EDU
                 </div>
 
                 <div className="pt-8 relative z-[1]">
