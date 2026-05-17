@@ -141,11 +141,11 @@ export default function HeroSection() {
 
   // Image sequence. Center image changes to me3.png in dark mode.
   const panelImages = [
-    "/shelbyville tn.jpg",
-    "/prison.png",
-    isDark ? "/me3.png" : "/me.png",
-    "/persevere.png",
-    "/dev.png",
+    isDark ? "/vilianshelby.png" : "/shelbyville tn.jpg",
+    isDark ? "/vilianprison.png" : "/prison.png",
+    isDark ? (hoveredPanel === 2 ? "/vilianpowerup.png" : "/me3.png") : (hoveredPanel === 2 ? "/powerup.png" : "/me.png"),
+    isDark ? "/vilianpersevere.png" : "/persevere.png",
+    isDark ? "/viliandev.png" : "/dev.png",
   ];
 
   /* 
@@ -185,6 +185,7 @@ export default function HeroSection() {
   ];
 
   const desktopBounds = getDesktopBounds(anchors);
+  const mobileBounds = { bottom: "0%", left: "0%", right: "0%", top: "0%" };
 
   // Derive text positioning based on current hovered panel width to keep things centered
   const getCenterObj = (panelIndex: number) => {
@@ -214,10 +215,10 @@ export default function HeroSection() {
       <HeroPanel 
         alt="Shelbyville, Tennessee origin story panel" 
         className="hero-panel-1 bg-black" 
-        imageContainerClassName="bottom-[80%] md:bottom-auto md:right-auto md:left-auto md:top-auto" 
+        imageContainerClassName="md:bottom-auto md:right-auto md:left-auto md:top-auto" 
         imageClassName="object-cover object-center"
         overlayClassName={isDark ? "bg-black/60" : "bg-[var(--color-comic-purple)]/40"}
-        imageContainerBounds={isDesktop ? desktopBounds[0] : {}}
+        imageContainerBounds={isDesktop ? desktopBounds[0] : mobileBounds}
         imageSrc={panelImages[0]} 
         index={0}
         clipPath={isDesktop ? desktopClipPaths[0] : undefined}
@@ -225,14 +226,18 @@ export default function HeroSection() {
         onHoverEnd={() => isDesktop && setHoveredPanel(null)}
       >
         <motion.div 
-          className="absolute z-10 flex flex-col items-center justify-center text-center w-[80%] md:w-auto md:min-w-[200px] left-[50%] md:left-[12.5%] top-[10%] md:top-[50%] -translate-x-1/2 -translate-y-1/2"
+          className="absolute z-30 md:z-10 flex flex-col items-center justify-center text-center w-[78%] md:w-auto md:min-w-[200px] left-[50%] md:left-[12.5%] top-[10%] md:top-[50%] -translate-x-1/2 -translate-y-1/2"
           animate={{ opacity: isDesktop ? (hoveredPanel === 0 ? 1 : 0) : 1, y: isDesktop ? (hoveredPanel === 0 ? 0 : 20) : 0 }}
           transition={{ duration: 0.4 }}
         >
-          <div className="comic-card max-w-[250px] md:max-w-xs border-4 shadow-[6px_6px_0px_var(--color-comic-ink)] transform -rotate-2" style={{ background: "white", borderColor: "var(--color-comic-ink)" }}>
-            <h3 className="comic-heading text-2xl" style={{ color: "var(--color-comic-purple)", textShadow: "2px 2px 0px var(--color-comic-ink)" }}>SHELBYVILLE</h3>
+          <div className="comic-card max-w-[13rem] md:max-w-xs border-4 shadow-[6px_6px_0px_var(--color-comic-ink)] transform -rotate-2" style={{ background: "white", borderColor: "var(--color-comic-ink)" }}>
+            <h3 className="comic-heading text-2xl" style={{ color: "var(--color-comic-purple)", textShadow: "2px 2px 0px var(--color-comic-ink)" }}>
+              {isDark ? "BORN IN SHADOWS" : "SHELBYVILLE"}
+            </h3>
             <p className="font-comic-body font-bold text-sm md:text-base mt-2 text-black">
-              Alex is from Shelbyville, Tennessee. That small-town start is chapter one.
+              {isDark 
+                ? "A small town tried to define me. Shelbyville gave me a beginning, but it could never contain what was growing inside me." 
+                : "Every story starts somewhere. Mine started in Shelbyville, Tennessee. Small town, big pressure, bigger dreams."}
             </p>
           </div>
         </motion.div>
@@ -242,11 +247,11 @@ export default function HeroSection() {
       <HeroPanel 
         alt="Locked away hard times story panel" 
         className="hero-panel-2 bg-white" 
-        imageContainerClassName="top-[20%] bottom-[55%] md:bottom-auto md:right-auto md:left-auto md:top-auto" 
+        imageContainerClassName="md:bottom-auto md:right-auto md:left-auto md:top-auto" 
         imageClassName="object-cover object-center"
         overlayClassName={isDark ? "bg-black/60" : "bg-[var(--color-comic-green)]/40"}
         imageAnimate={{ objectPosition: isDesktop && hoveredPanel === 1 ? "10% center" : "50% center" }}
-        imageContainerBounds={isDesktop ? desktopBounds[1] : {}}
+        imageContainerBounds={isDesktop ? desktopBounds[1] : mobileBounds}
         imageSrc={panelImages[1]} 
         index={1}
         clipPath={isDesktop ? desktopClipPaths[1] : undefined}
@@ -254,14 +259,18 @@ export default function HeroSection() {
         onHoverEnd={() => isDesktop && setHoveredPanel(null)}
       >
         <motion.div 
-          className="absolute z-10 flex flex-col items-center justify-center text-center w-[80%] md:w-auto left-[50%] md:left-[30%] top-[30%] md:top-[66%] -translate-x-1/2 -translate-y-1/2"
+          className="absolute z-30 md:z-10 flex flex-col items-center justify-center text-center w-[78%] md:w-auto left-[50%] md:left-[30%] top-[31%] md:top-[66%] -translate-x-1/2 -translate-y-1/2"
           animate={{ opacity: isDesktop ? (hoveredPanel === 1 ? 1 : 0) : 1, y: isDesktop ? (hoveredPanel === 1 ? 0 : 20) : 0 }}
           transition={{ duration: 0.4 }}
         >
-          <div className="thought-bubble transform rotate-2 max-w-[200px] md:max-w-[250px] !p-4">
-            <h3 className="comic-heading text-2xl" style={{ color: "var(--color-comic-red)", textShadow: "2px 2px 0px var(--color-comic-ink)" }}>HARD TIMES</h3>
+          <div className="thought-bubble transform rotate-2 max-w-[13rem] md:max-w-[250px] !p-3 md:!p-4">
+            <h3 className="comic-heading text-2xl" style={{ color: "var(--color-comic-red)", textShadow: "2px 2px 0px var(--color-comic-ink)" }}>
+              {isDark ? "THE CAGE" : "HARD TIMES"}
+            </h3>
             <p className="font-comic-body text-sm md:text-base font-bold mt-1 text-black">
-              Life hit hard, and Alex was locked away. The story could have ended there.
+              {isDark 
+                ? "The world thought iron bars could break me. Instead, the silence forged me into something colder, sharper, and far more dangerous." 
+                : "Life hit hard. The walls closed in. But even when everything looked over, something in me refused to stay buried."}
             </p>
           </div>
         </motion.div>
@@ -271,14 +280,14 @@ export default function HeroSection() {
       <HeroPanel 
         alt="Hero Panel 3" 
         className="hero-panel-3" 
-        imageContainerClassName="top-[40%] bottom-[40%] md:bottom-auto md:right-auto md:left-auto md:top-auto" 
+        imageContainerClassName="md:bottom-auto md:right-auto md:left-auto md:top-auto" 
         imageClassName={
           isDark
             ? "object-cover object-top md:object-center contrast-[1.28] saturate-[0.72] brightness-[0.78]"
             : "object-cover object-top md:object-center"
         }
         overlayClassName={isDark ? "bg-black/35" : "bg-[var(--color-comic-red)]/40"}
-        imageContainerBounds={isDesktop ? desktopBounds[2] : {}}
+        imageContainerBounds={isDesktop ? desktopBounds[2] : mobileBounds}
         imageSrc={panelImages[2]} 
         index={2}
         clipPath={isDesktop ? desktopClipPaths[2] : undefined}
@@ -293,7 +302,7 @@ export default function HeroSection() {
           </>
         )}
         <motion.div 
-          className="absolute z-10 flex flex-col items-center justify-center text-center w-[80%] md:w-auto left-[50%] md:left-[50%] top-[50%] md:top-[35%] -translate-x-1/2 -translate-y-1/2"
+          className="absolute z-30 md:z-10 flex flex-col items-center justify-center text-center w-[78%] md:w-auto left-[50%] md:left-[50%] top-[50%] md:top-[35%] -translate-x-1/2 -translate-y-1/2"
           animate={{ opacity: isDesktop ? (hoveredPanel === 2 ? 1 : 0) : 1, y: isDesktop ? (hoveredPanel === 2 ? 0 : 20) : 0 }}
           transition={{ duration: 0.4 }}
         >
@@ -315,11 +324,11 @@ export default function HeroSection() {
       <HeroPanel 
         alt="Persevere transformation story panel" 
         className="hero-panel-4 bg-black" 
-        imageContainerClassName="top-[60%] bottom-[15%] md:bottom-auto md:right-auto md:left-auto md:top-auto" 
+        imageContainerClassName="md:bottom-auto md:right-auto md:left-auto md:top-auto" 
         imageClassName="object-cover object-center"
         overlayClassName={isDark ? "bg-black/60" : "bg-white/40"}
         imageAnimate={{ objectPosition: isDesktop && hoveredPanel === 3 ? "90% center" : "50% center" }}
-        imageContainerBounds={isDesktop ? desktopBounds[3] : {}}
+        imageContainerBounds={isDesktop ? desktopBounds[3] : mobileBounds}
         imageSrc={panelImages[3]} 
         index={3}
         clipPath={isDesktop ? desktopClipPaths[3] : undefined}
@@ -327,14 +336,18 @@ export default function HeroSection() {
         onHoverEnd={() => isDesktop && setHoveredPanel(null)}
       >
         <motion.div 
-          className="absolute z-10 flex flex-col items-center justify-center text-center w-[80%] md:w-auto left-[50%] md:left-[70%] top-[70%] md:top-[66%] -translate-x-1/2 -translate-y-1/2"
+          className="absolute z-30 md:z-10 flex flex-col items-center justify-center text-center w-[78%] md:w-auto left-[50%] md:left-[70%] top-[71%] md:top-[66%] -translate-x-1/2 -translate-y-1/2"
           animate={{ opacity: isDesktop ? (hoveredPanel === 3 ? 1 : 0) : 1, y: isDesktop ? (hoveredPanel === 3 ? 0 : 20) : 0 }}
           transition={{ duration: 0.4 }}
         >
-          <div className="speech-bubble max-w-[200px] md:max-w-[250px] transform -rotate-1 !p-4">
-            <h3 className="comic-heading text-2xl" style={{ color: "var(--color-comic-blue)", textShadow: "2px 2px 0px var(--color-comic-ink)" }}>PERSEVERE</h3>
+          <div className="speech-bubble max-w-[13rem] md:max-w-[250px] transform -rotate-1 !p-3 md:!p-4">
+            <h3 className="comic-heading text-2xl" style={{ color: "var(--color-comic-blue)", textShadow: "2px 2px 0px var(--color-comic-ink)" }}>
+              {isDark ? "EVOLUTION" : "PERSEVERE"}
+            </h3>
             <p className="font-comic-body text-sm md:text-base font-bold mt-1 text-black">
-              Through Persevere, he found the path forward and started rebuilding.
+              {isDark 
+                ? "Pain became discipline. Discipline became obsession. Persevere was no longer just a word. It became the law I live by." 
+                : "That word became the mission. Learn. Rebuild. Push forward. Turn the lowest chapter into the launch point."}
             </p>
           </div>
         </motion.div>
@@ -344,10 +357,10 @@ export default function HeroSection() {
       <HeroPanel 
         alt="Full-stack developer story panel" 
         className="hero-panel-5 bg-white" 
-        imageContainerClassName="top-[80%] md:bottom-auto md:right-auto md:left-auto md:top-auto" 
+        imageContainerClassName="md:bottom-auto md:right-auto md:left-auto md:top-auto" 
         imageClassName="object-cover object-center"
         overlayClassName={isDark ? "bg-black/60" : "bg-[var(--color-comic-yellow)]/40"}
-        imageContainerBounds={isDesktop ? desktopBounds[4] : {}}
+        imageContainerBounds={isDesktop ? desktopBounds[4] : mobileBounds}
         imageSrc={panelImages[4]} 
         index={4}
         clipPath={isDesktop ? desktopClipPaths[4] : undefined}
@@ -355,14 +368,18 @@ export default function HeroSection() {
         onHoverEnd={() => isDesktop && setHoveredPanel(null)}
       >
         <motion.div 
-          className="absolute z-10 flex flex-col items-center justify-center text-center w-[80%] md:w-auto left-[50%] md:left-[85%] top-[85%] md:top-[50%] -translate-x-1/2 -translate-y-1/2"
+          className="absolute z-30 md:z-10 flex flex-col items-center justify-center text-center w-[78%] md:w-auto left-[50%] md:left-[85%] top-[91%] md:top-[50%] -translate-x-1/2 -translate-y-1/2"
           animate={{ opacity: isDesktop ? (hoveredPanel === 4 ? 1 : 0) : 1, y: isDesktop ? (hoveredPanel === 4 ? 0 : 20) : 0 }}
           transition={{ duration: 0.4 }}
         >
-          <div className="comic-card max-w-[200px] md:max-w-[250px] border-4 shadow-[-6px_6px_0px_var(--color-comic-ink)] transform rotate-3" style={{ background: "var(--color-comic-yellow)", borderColor: "var(--color-comic-ink)" }}>
-            <h3 className="comic-heading text-2xl" style={{ color: "var(--color-comic-ink)", textShadow: "none" }}>FULL STACK DEV</h3>
+          <div className="comic-card max-w-[13rem] md:max-w-[250px] border-4 shadow-[-6px_6px_0px_var(--color-comic-ink)] transform rotate-3" style={{ background: "var(--color-comic-yellow)", borderColor: "var(--color-comic-ink)" }}>
+            <h3 className="comic-heading text-2xl" style={{ color: "var(--color-comic-ink)", textShadow: "none" }}>
+              {isDark ? "ASCENSION" : "FULL STACK DEV"}
+            </h3>
             <p className="font-comic-body text-sm md:text-base font-bold mt-2 text-black">
-              Now he builds real software as a full-stack developer.
+              {isDark 
+                ? "Now I build more than software. I build control, power, and a future shaped entirely by my own will." 
+                : "Now I build. Code, create, teach, and level up daily. The villain mode is focus. The comeback is the superpower."}
             </p>
           </div>
         </motion.div>

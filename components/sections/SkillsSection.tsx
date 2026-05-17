@@ -63,7 +63,7 @@ function StatRing({
       className="skill-stat-row"
       initial={{ opacity: 0, x: 50 }}
       transition={{ delay: index * 0.1, duration: 0.45, ease: "easeOut" }}
-      viewport={{ once: true, margin: "-70px" }}
+      viewport={{ once: false, margin: "-70px" }}
       whileHover={{ x: -6 }}
       whileInView={{ opacity: 1, x: 0 }}
     >
@@ -78,7 +78,7 @@ function StatRing({
             r="45"
             strokeLinecap="round"
             transition={{ delay: 0.25 + index * 0.12, duration: 1, ease: "easeOut" }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             whileInView={{ pathLength: progress }}
           />
         </svg>
@@ -157,7 +157,7 @@ export default function SkillsSection() {
           className="text-center"
           initial={{ opacity: 0, y: 30 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: false, margin: "-100px" }}
           whileInView={{ opacity: 1, y: 0 }}
         >
           <h2 className="comic-heading text-4xl md:text-6xl">Skills</h2>
@@ -169,7 +169,7 @@ export default function SkillsSection() {
             className="skills-character-panel"
             initial={{ opacity: 0, x: -70 }}
             transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true, margin: "-80px" }}
+            viewport={{ once: false, margin: "-80px" }}
             whileInView={{ opacity: 1, x: 0 }}
           >
             <img

@@ -53,7 +53,7 @@ export default function EducationSection() {
           className="text-center mb-14"
           initial={{ opacity: 0, y: 30 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: false, margin: "-100px" }}
           whileInView={{ opacity: 1, y: 0 }}
         >
           <h2 className="comic-heading text-4xl md:text-6xl">Education</h2>
@@ -75,7 +75,7 @@ export default function EducationSection() {
                 delay: index * 0.15,
                 ease: "easeOut",
               }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: false, margin: "-50px" }}
               whileInView={{ opacity: 1, y: 0, rotate: 0 }}
             >
               <div className="comic-card relative">

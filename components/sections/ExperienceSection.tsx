@@ -62,7 +62,7 @@ export default function ExperienceSection() {
           className="text-center mb-14"
           initial={{ opacity: 0, y: 30 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: false, margin: "-100px" }}
           whileInView={{ opacity: 1, y: 0 }}
         >
           <h2 className="comic-heading text-4xl md:text-6xl">Experience</h2>
@@ -83,7 +83,7 @@ export default function ExperienceSection() {
               transformOrigin: "top",
             }}
             transition={{ duration: 1, ease: "easeOut" }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             whileInView={{ scaleY: 1 }}
           />
 
@@ -102,7 +102,7 @@ export default function ExperienceSection() {
                   delay: index * 0.15,
                   ease: "easeOut",
                 }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={{ once: false, margin: "-50px" }}
                 whileInView={{ opacity: 1, x: 0, rotate: 0 }}
               >
                 {/* Timeline node */}
@@ -117,7 +117,7 @@ export default function ExperienceSection() {
                     top: "1.5rem",
                   }}
                   transition={{ duration: 0.3, delay: index * 0.15 + 0.2 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: false }}
                   whileInView={{ scale: 1 }}
                 >
                   {index + 1}
